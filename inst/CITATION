@@ -1,0 +1,12 @@
+citHeader("To cite AIDA in publications, please use:")
+
+bibentry(
+  bibtype = "Manual",
+  title = "AIDA: Analysis of Interval DAta",
+  author = c(
+    person("Catarina P.", "Loureiro", role = c("aut", "cre"))
+  ),
+  year = "2026",
+  note = "R package version 0.1.5",
+  textVersion = "Loureiro C. P. (2026). AIDA: Analysis of Interval DAta. R package version 0.1.5."
+)

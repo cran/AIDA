@@ -1,0 +1,31 @@
+Package: AIDA
+Type: Package
+Title: Analysis of Interval DAta
+Version: 0.1.5
+Authors@R: 
+    person("Catarina P. Loureiro", role = c("aut", "cre"), email = "catarinapadrela@tecnico.ulisboa.pt", comment = c(ORCID = "0009-0001-9464-5824"))
+Description: Tools for the analysis of interval-valued data, including construction, visualization, and statistical modeling.
+    The package provides the 'intData' class for representing interval-valued data, along with functions to aggregate microdata and to estimate parameters of latent distributions.
+    Barycenter and covariance matrix estimation is implemented based on the Mallows distance (Oliveira et al. (2025) <doi:10.48550/arXiv.2407.05105>).
+    Robust estimation of the symbolic covariance matrix is implemented via the Interval Minimum Covariance Determinant (IMCD) estimator, enabling outlier detection based on the robust squared Interval-Mahalanobis distance, as proposed by Loureiro et al. (2026) <doi:10.48550/arXiv.2604.26769>.
+License: MIT + file LICENSE
+Encoding: UTF-8
+URL: https://github.com/catarinaploureiro/AIDA,
+        https://catarinaploureiro.github.io/AIDA/
+BugReports: https://github.com/catarinaploureiro/AIDA/issues
+RoxygenNote: 7.3.3
+LazyData: true
+LazyDataCompression: xz
+VignetteBuilder: knitr
+Language: en-US
+Imports: ggplot2, ggrepel, CerioliOutlierDetection, cellWise, geigen,
+        kde1d, plotly, robustbase, MASS, assertthat, methods
+Depends: R (>= 3.6)
+Suggests: knitr, rmarkdown, testthat (>= 3.0.0), corrplot
+NeedsCompilation: no
+Packaged: 2026-05-07 22:19:07 UTC; catar
+Author: Catarina P. Loureiro [aut, cre] (ORCID:
+    <https://orcid.org/0009-0001-9464-5824>)
+Maintainer: Catarina P. Loureiro <catarinapadrela@tecnico.ulisboa.pt>
+Repository: CRAN
+Date/Publication: 2026-05-12 19:30:02 UTC

@@ -1,0 +1,138 @@
+---
+title: "Class `intData` examples"
+author: "Catarina P. Loureiro"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{intData_examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+link-citations: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+```{r, results='hide', message = FALSE, warning=FALSE}
+library(AIDA)
+```
+
+This vignette provides examples of how to use the `intData` class and related functions for handling interval-valued data. The `intData` class is designed to represent interval-valued data. The examples included here demonstrate how to create `intData` objects, compute summary statistics, and visualize interval-valued data using the `SYMB.pairs.panels` function. The dataset used in these examples is the *Credit Card* dataset, which is available in the package and can be loaded using `data("creditcard")`. The examples illustrate the basic functionalities of the `intData` class and how to work with interval-valued data in R.
+
+For more details on the interval-valued data framework implemented in the package, please refer to @oliveira2025.
+
+## Credit Card Dataset
+This dataset contains interval data of credit card expenses (@billard_diday_2006), including min-max values, centers and ranges, centers and logranges, and microdata. The aggregation of the microdata was done by person-month, resulting in $n=36$ observations. It is composed of $5$ variables:
+
+- *Food*
+- *Social*
+- *Travel*
+- *Gas*
+- *Clothes*
+
+The `creditcard` dataset includes the following components:
+
+- `microdata`: A data frame with $1000$ rows and $7$ columns. It contains the microdata, with individual measurements of each variable for all observations.
+- `min_max`: A data frame with $36$ rows and $10$ columns. Each row corresponds to a different interval observation, and each column gives the minimum and maximum values for each variable.
+- `centers_ranges`: A data frame with $36$ rows and $10$ columns. Each row corresponds to the centers and ranges of the interval data.
+- `centers_logranges`: A data frame with $36$ rows and $10$ columns. Each row corresponds to the centers and logranges of the interval data.
+
+```{r}
+data(creditcard)
+CreditCard_microdata <- creditcard$microdata
+CreditCard_min_max <- creditcard$min_max
+CreditCard_CR <- creditcard$centers_ranges
+```
+
+There are different ways to create an `intData` object from the dataset, depending on the assumptions about the latent distribution of the microdata. In this example, we will create an `intData` object using the `min_max` component of the dataset, assuming a continuous uniform distribution for the latent variables, which corresponds to the symmetric and i.d. case with $\delta = 1/12$. This is the default setting for the `intData` class.
+
+```{r}
+credit_card_int_unif <- intData(CreditCard_min_max, Seq = "LbUb_VarbyVar", 
+                                VarNames = colnames(CreditCard_microdata)[3:7])
+
+# Check the parameters of the latent distribution                          
+credit_card_int_unif@LatentParam
+```
+
+Since the microdata are available, we can take a closer look at the distribution of the latent variables. The `get_latent_var` function can be used to obtain the latent variables observed values, by standardizing the microdata into the $[-1,1]$ interval. In this example, we will use the `min_max` component of the dataset to standardize the microdata. The aggregation criterion is by month and name, so we will create a new variable that combines the name and month to use as the grouping variable for the standardization process. We can then visualize the distribution of the latent variables using histograms and density plots.
+
+```{r, fig.width=7, fig.height=2}
+credit_agrby <- factor(paste(CreditCard_microdata$Name,CreditCard_microdata$Month, sep = "_"))
+credit_card_U <- get_latent_var(CreditCard_microdata[,3:7], CreditCard_min_max, credit_agrby,
+                                rownames(CreditCard_min_max), Seq = "LbUb_VarbyVar")
+
+oldpar <- par(no.readonly = TRUE)
+par(mfrow=c(1,5), mar=c(2, 2, 2, 1))
+for (i in 1:5){
+    hist(credit_card_U[,i], xlab = NULL, ylab = NULL, 
+            main = colnames(credit_card_U)[i], probability = TRUE)
+    lines(density(credit_card_U[,i], na.rm = TRUE), col = '#009de0', lwd = 2)
+}
+par(oldpar)
+```
+
+After examining the distribution of the latent variables, we can assume the distributions are approximately triangular and symmetric. Then, we can create an `intData` object using the `min_max` component of the dataset, specifying the latent distribution as "Triang".
+
+```{r}
+credit_card_int_triang <- intData(CreditCard_min_max, Seq = "LbUb_VarbyVar", LatentDist = "Triang", 
+                                    VarNames = colnames(CreditCard_microdata)[3:7])
+
+# Check the parameters of the latent distribution
+credit_card_int_triang@LatentParam
+
+head(credit_card_int_triang)
+```
+
+The `intData` object contains the centers and ranges of the interval data, as well as the parameters of the latent distribution. The centers and ranges can be accessed using the `@Centers` and `@Ranges` slots, respectively, while the lower and upper bounds can be obtained using the `LowerBounds` and `UpperBounds` functions.
+
+```{r}
+credit_card_int_triang@Centers[1:5,]
+credit_card_int_triang@Ranges[1:5,]
+LowerBounds(credit_card_int_triang)[1:5,]
+UpperBounds(credit_card_int_triang)[1:5,]
+```
+
+Alternatively, we can create an `intData` object using the `centers_ranges` component of the dataset, which contains the centers and ranges of the interval data. As for the latent variables' parameters, since we have the microdata available, another option is to estimate the parameters directly based on the microdata by setting `LatentCase = "General"` and `LatentDist = "KDE"` to use a kernel density estimation for the latent distribution. In this case, it is necessary to specify the `Umicro` argument, which contains the standardized microdata values.
+
+```{r}
+credit_card_int_KDE <- intData(CreditCard_CR, Seq = "LbUb_VarbyVar", 
+                                VarNames = colnames(CreditCard_microdata)[3:7], 
+                                LatentCase = "General", LatentDist = "KDE", Umicro = credit_card_U)
+
+# Check the parameters of the latent distribution
+credit_card_int_KDE@LatentParam
+```
+
+In the majority of the cases, the macrodata has to be constructed from the microdata. The `micro2intData` function can be used to create an `intData` object from the microdata, by aggregating the microdata according to a specified criterion. In this example, we will aggregate the microdata by month and name, using the same grouping variable created earlier. We will also specify the latent distribution as "General" to estimate the parameters based on the microdata. If the `LatentCase` argument is omitted, it assumes the latent distribution is uniform (i.d. and symmetric), which is the default setting for the `intData` class. It is also possible to specify the latent distribution, as seen in the previous examples.
+
+```{r}
+credit_card_int_agr <- micro2intData(CreditCard_microdata[,3:7], credit_agrby, LatentCase = "General")
+
+# Check the parameters of the latent distribution
+credit_card_int_agr@LatentParam
+
+head(credit_card_int_agr)
+```
+
+Now that we have created the `intData` object, we can, for instance, compute the symbolic covariance and correlation matrices of the interval data using the `int_cov` function.
+
+```{r}
+credit_card_cov <- int_cov(credit_card_int_agr)
+credit_card_cor <- cov2cor(credit_card_cov)
+
+# Check the covariance matrix
+credit_card_cov
+```
+
+Finally, we can visualize the interval data using the `SYMB.pairs.panels` function, which creates a pairs plot for interval-valued data. The lower triangular shows scatter plots of the variables, while the upper triangular shows the interval correlation matrix.
+
+```{r, fig.width=6, fig.height=6}
+SYMB.pairs.panels(credit_card_int_agr, type = "rectangles", 
+                    corr = credit_card_cor, labels = colnames(credit_card_int_agr))
+```
+
+## References
