@@ -7,8 +7,8 @@
 \format{
 A list with the following components:
 \describe{
-\item{\code{min_max}}{A data frame with \code{27} rows and \code{9} columns. It contains the lower and upper bounds for each variable.}
-\item{\code{intData}}{An \linkS4class{intData} object with \code{27} interval-valued observations and \code{4} variables. The variable "Price" was log-transformed into "lnPrice". The microdata are not available, thus the default parameters of the latent distributions were used assuming a uniform distribution.}
+\item{\code{microdata}}{A data frame with \code{27} rows and \code{9} columns. It contains the lower and upper bounds for each variable.}
+\item{\code{intData}}{An \code{\linkS4class{intData}} object with \code{27} interval-valued observations and \code{4} variables. The variable "Price" was log-transformed into "lnPrice". The microdata are not available, thus the default parameters of the latent distributions were used assuming a uniform distribution.}
 }
 }
 \usage{
@@ -21,7 +21,7 @@ The aggregation of the microdata was done by car model.
 }
 \examples{
 data(intCars)
-head(intCars$min_max)
+head(intCars$microdata)
 head(intCars$intData)
 
 }

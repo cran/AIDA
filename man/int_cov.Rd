@@ -14,7 +14,9 @@ int_cov(
 )
 }
 \arguments{
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data.}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data.
+If \code{data} is provided, the covariance matrix is calculated based on the the sample covariance of the centers and ranges and the sample covariance between centers and ranges, and the parameters of the latent variables contained in the \code{intData} object.
+If \code{data} is not provided, the covariance matrix is calculated based on \code{sigma_cc}, \code{sigma_rr}, \code{sigma_cr}, \code{LatentParam}, and \code{LatentCase}.}
 
 \item{sigma_cc}{Covariance matrix of the centers.}
 
@@ -22,13 +24,14 @@ int_cov(
 
 \item{sigma_cr}{Covariance matrix between the centers and ranges.}
 
-\item{LatentParam}{A list with the parameters of the latent variables.}
+\item{LatentParam}{A list with the parameters of the latent variables.
+Expects a list with a single number if \code{LatentCase} is \code{"U_id_symmetric"}, a list of two numbers if \code{LatentCase} is \code{"U_id"}, and a list of two matrices if \code{LatentCase} is \code{"General"}.}
 
 \item{LatentCase}{A string specifying which of the three scenarios applies to the latent variables:
 \itemize{
-\item \code{"General"}: The case where the latent variables do not have any nice properties.
-\item \code{"U_id"}: The case where the latent variables are identically distributed.
 \item \code{"U_id_symmetric"}: The case where the latent variables are identically distributed and symmetric.
+\item \code{"U_id"}: The case where the latent variables are identically distributed.
+\item \code{"General"}: The case where the latent variables do not have any nice properties.
 }
 Defaults to \code{"U_id_symmetric"}.}
 }
@@ -53,17 +56,19 @@ where \eqn{\delta=\mathbb{E}(U^2)/4} and \eqn{\mathbb{E}(U)} are the parameters 
 where:
 \itemize{
 \item \eqn{\boldsymbol{\Psi}=\text{diag}(\mathbb{E}(U_1),\dots,\mathbb{E}(U_p))},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ij}=\mathcal{E}(U_i,U_j)}, \eqn{i\neq j}, with \eqn{\mathcal{E}(U_i,U_j)=\int_0^1 F_{U_i}^{-1}(t) F_{U_j}^{-1}(t) \, dt},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ii}=\mathbb{E}(U_i^2)}, \eqn{i,j=1,\dots,p},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{j\ell}=\mathcal{E}(U_j,U_\ell)}, \eqn{j\neq \ell}, with \eqn{\mathcal{E}(U_j,U_\ell)=\int_0^1 F_{U_j}^{-1}(t) F_{U_\ell}^{-1}(t) \, dt},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{jj}=\mathbb{E}(U_j^2)}, \eqn{j,\ell=1,\dots,p},
 \item \eqn{\bullet} denotes the Schur (or entrywise) product of matrices.
 }
 }
+The covariance matrix can be calculated either based on the covariance matrices of the centers and ranges or based on the data. If the data is provided, the covariance matrices are calculated using the sample covariance of the centers and ranges and the sample covariance between centers and ranges.
+For the robust estimation of the covariance matrix, see \code{\link{IMCD}}.
 }
 \examples{
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-credit_card_cov<-int_cov(credit_card_int)
+credit_card_cov <- int_cov(credit_card_int)
 }
 \references{
 Oliveira, M. R., Pinheiro, D., & Oliveira, L. (2025).

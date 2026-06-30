@@ -9,7 +9,7 @@ int_cov_z(z, data)
 \arguments{
 \item{z}{A vector of 0 and 1, indicating which observations should be considered for the calculation}
 
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
 The symbolic covariance matrix
@@ -27,17 +27,24 @@ The sample interval-valued covariance matrix is obtained according to the \code{
 \deqn{\boldsymbol{S}_B(\boldsymbol{z})=\left(\dfrac{1}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{c}_{h}^{\top}\right)-\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top+\left(\dfrac{\delta}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{r}_{h}^{\top}\right)-\delta\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top,}
 where \eqn{\delta=\mathbb{E}(U^2)/4} is the parameter of the latent variables.
 \item \code{"U_id"}: The latent variables are identically distributed:
-\deqn{\boldsymbol{S}_B(\boldsymbol{z})=\left(\dfrac{1}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{c}_{h}^{\top}\right)-\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top+\left(\dfrac{\delta}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{r}_{h}^{\top}\right)-\delta\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\\
-             +\left(\dfrac{\mathbb{E}(U)}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{r}_{h}^{\top}\right)-\dfrac{\mathbb{E}(U)}{2}\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top+\left(\dfrac{\mathbb{E}(U)}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{c}_{h}^{\top}\right)-\dfrac{\mathbb{E}(U)}{2}\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top,}
+\deqn{\begin{aligned}
+             \boldsymbol{S}_B(\boldsymbol{z})&=\left(\dfrac{1}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{c}_{h}^{\top}\right)-\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top+\left(\dfrac{\delta}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{r}_{h}^{\top}\right)-\delta\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\\
+             &\quad+\left(\dfrac{\mathbb{E}(U)}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{r}_{h}^{\top}\right)-\dfrac{\mathbb{E}(U)}{2}\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\\
+             &\quad+\left(\dfrac{\mathbb{E}(U)}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{c}_{h}^{\top}\right)-\dfrac{\mathbb{E}(U)}{2}\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top,
+     \end{aligned}}
 where \eqn{\delta=\mathbb{E}(U^2)/4} and \eqn{\mathbb{E}(U)} are the parameters of the latent variables.
 \item \code{"General"}: The latent variables do not have any nice properties:
-\deqn{\boldsymbol{S}_B(\boldsymbol{z})=\left(\dfrac{1}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{c}_{h}^{\top}\right)-\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top+\left(\dfrac{1}{4m}\boldsymbol{\mathfrak{E}}_{UU}\bullet\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{r}_{h}^{\top}\right)-\dfrac{1}{4}\boldsymbol{\mathfrak{E}}_{UU}\bullet\left[\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\right]\\
-             +\left(\dfrac{1}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{r}_{h}^{\top}\right)\boldsymbol{\Psi}-\dfrac{1}{2}\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\boldsymbol{\Psi}+\boldsymbol{\Psi}\left(\dfrac{1}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{c}_{h}^{\top}\right)-\dfrac{1}{2}\boldsymbol{\Psi}\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top,}
+\deqn{\begin{aligned}
+             \boldsymbol{S}_B(\boldsymbol{z})&=\left(\dfrac{1}{m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{c}_{h}^{\top}\right)-\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top\\
+             &\quad+\left(\dfrac{1}{4m}\boldsymbol{\mathfrak{E}}_{UU}\bullet\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{r}_{h}^{\top}\right)-\dfrac{1}{4}\boldsymbol{\mathfrak{E}}_{UU}\bullet\left[\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\right]\\
+             &\quad+\left(\dfrac{1}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{c}_{h}\boldsymbol{r}_{h}^{\top}\right)\boldsymbol{\Psi}-\dfrac{1}{2}\overline{\boldsymbol{c}}_B(\boldsymbol{z})\overline{\boldsymbol{r}}_B(\boldsymbol{z})^\top\boldsymbol{\Psi}\\
+             &\quad+\boldsymbol{\Psi}\left(\dfrac{1}{2m}\sum\limits_{h=1}^{n}z_{h}\boldsymbol{r}_{h}\boldsymbol{c}_{h}^{\top}\right)-\dfrac{1}{2}\boldsymbol{\Psi}\overline{\boldsymbol{r}}_B(\boldsymbol{z})\overline{\boldsymbol{c}}_B(\boldsymbol{z})^\top,
+     \end{aligned}}
 where:
 \itemize{
 \item \eqn{\boldsymbol{\Psi}=\text{diag}(\mathbb{E}(U_1),\dots,\mathbb{E}(U_p))},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ij}=\mathcal{E}(U_i,U_j)}, \eqn{i\neq j}, with \eqn{\mathcal{E}(U_i,U_j)=\int_0^1 F_{U_i}^{-1}(t) F_{U_j}^{-1}(t) \, dt},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ii}=\mathbb{E}(U_i^2)}, \eqn{i,j=1,\dots,p},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{j\ell}=\mathcal{E}(U_j,U_\ell)}, \eqn{j\neq \ell}, with \eqn{\mathcal{E}(U_j,U_\ell)=\int_0^1 F_{U_j}^{-1}(t) F_{U_\ell}^{-1}(t) \, dt},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{jj}=\mathbb{E}(U_j^2)}, \eqn{j,\ell=1,\dots,p},
 \item \eqn{\bullet} denotes the Schur (or entrywise) product of matrices.
 }
 }
@@ -46,8 +53,9 @@ where:
 data(creditcard)
 credit_card_int <- creditcard$intData
 
+# Compute sample interval-valued covariance matrix using the all the observations
 z <- rep(1, nrow(credit_card_int))
-credit_card_cov<-int_cov_z(z,credit_card_int)
+credit_card_cov <- int_cov_z(z, credit_card_int)
 }
 \references{
 Oliveira, M. R., Pinheiro, D., & Oliveira, L. (2025).

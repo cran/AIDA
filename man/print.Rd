@@ -2,7 +2,7 @@
 % Please edit documentation in R/intData_class.r
 \name{print,summaryintData-method}
 \alias{print,summaryintData-method}
-\title{Print Method for Summary \linkS4class{intData}}
+\title{Print Method for Summary \code{\linkS4class{intData}}}
 \usage{
 \S4method{print}{summaryintData}(x, ...)
 }
@@ -15,5 +15,5 @@
 The object itself, returned invisibly. Called for its side effects (printing).
 }
 \description{
-Print Method for Summary \linkS4class{intData}
+Print Method for Summary \code{\linkS4class{intData}}
 }

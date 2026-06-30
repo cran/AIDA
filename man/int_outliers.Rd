@@ -55,14 +55,19 @@ This function classifies observations as outliers based on robust distances and 
 # Example of detecting outliers using robust distances
 set.seed(42)
 robust_dist <- abs(rnorm(100))
-result <- int_outliers(robust_dist, cutoff="chi-squared", p=5)
+result <- int_outliers(robust_dist, cutoff = "chi-squared", p = 5)
 
 # Example using creditcard dataset
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-credit_card_IMCD <- IMCD(credit_card_int, floor(0.75*credit_card_int@NObs), "farness", 0.9)
-credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, "farness", 0.9)
+# Compute robust distances using IMCD estimates of mean and covariance
+credit_card_dist <- IMah_dist(credit_card_int)
+
+# Detect outliers using farness cutoff
+credit_card_outliers <- int_outliers(credit_card_dist, 
+                                     cutoff = "farness", 
+                                     cutoff_lvl = 0.9)
 }
 \references{
 Loureiro, C. P., Oliveira, M. R., Brito, P., & Oliveira, L. (2026).

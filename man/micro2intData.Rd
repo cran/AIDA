@@ -5,7 +5,7 @@
 \title{Aggregate Microdata into Interval-Valued Data}
 \usage{
 micro2intData(
-  MicDtDF,
+  microdata,
   agrby,
   agrcrt = "minmax",
   LatentParam = NULL,
@@ -18,24 +18,25 @@ micro2intData(
 )
 }
 \arguments{
-\item{MicDtDF}{A data frame containing the microdata. All columns should be numeric.}
+\item{microdata}{A data frame containing the microdata. All columns should be numeric.}
 
 \item{agrby}{A factor used to specify the grouping of the microdata for aggregation.}
 
 \item{agrcrt}{A string or numeric vector of length 2 specifying the aggregation criterion. The default is \code{"minmax"}, which takes the minimum and maximum values for each variable. If a numeric vector is provided, it should specify the lower and upper percentiles for aggregation (e.g., \code{c(0.05, 0.95)}).}
 
-\item{LatentParam}{Optional latent parameter used for certain types of latent distributions.}
+\item{LatentParam}{(Optional) A list with the parameters of the latent variables.
+Expects a list with a single number if \code{LatentCase} is \code{"U_id_symmetric"}, a list of two numbers if \code{LatentCase} is \code{"U_id"}, and a list of two matrices if \code{LatentCase} is \code{"General"}.}
 
 \item{LatentCase}{A string specifying which of the three scenarios applies to the latent variables:
 \itemize{
-\item \code{"General"}: The case where the latent variables do not have any nice properties.
-\item \code{"U_id"}: The case where the latent variables are identically distributed.
 \item \code{"U_id_symmetric"}: The case where the latent variables are identically distributed and symmetric.
+\item \code{"U_id"}: The case where the latent variables are identically distributed.
+\item \code{"General"}: The case where the latent variables do not have any nice properties.
 }
 Defaults to \code{"U_id_symmetric"}.}
 
-\item{LatentDist}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"},\code{"Triang"},\code{"TNorm"},\code{"InvTri"},\code{"Beta"},\code{"KDE"},\code{"Degenerated"}), if not a vector must be provided with the distribution for each variable.
-The default is \code{"KDE"} if \code{LatentCase="General"}.}
+\item{LatentDist}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"}, \code{"Triang"}, \code{"TNorm"}, \code{"InvTri"}, \code{"Beta"}, \code{"KDE"}, \code{"Degenerated"}), if not a vector must be provided with the distribution for each variable.
+The default is \code{"Unif"} if \code{LatentCase="U_id_symmetric"}, and \code{"KDE"} if \code{LatentCase="General"}.}
 
 \item{TriangParam}{Mode of the triangular distribution. If the latent variables are identically distributed, it is only necessary to provide a number, if not a vector is needed.
 The default is \code{0}.}
@@ -50,7 +51,7 @@ The default is \code{1}.}
 The default is \code{FALSE}.}
 }
 \value{
-An \linkS4class{intData} object containing the aggregated interval-valued data, or \code{NULL} if all units lead to degenerate intervals.
+An \code{\linkS4class{intData}} object containing the aggregated interval-valued data, or \code{NULL} if all units lead to degenerate intervals.
 }
 \description{
 Aggregates microdata from a data frame into interval-valued data using various criteria and latent distribution settings.
@@ -64,8 +65,15 @@ If some rows contain invalid (non-finite or missing) values, those rows are remo
 \examples{
 data(creditcard)
 CreditCard_microdata <- creditcard$microdata
-credit_agrby<-factor(paste(CreditCard_microdata$Name,CreditCard_microdata$Month,sep = "_"))
-credit_agr<-micro2intData(CreditCard_microdata[,3:7],credit_agrby,LatentCase = "General")
+
+# Define grouping variable for microdata aggregation
+credit_agrby <- factor(paste(CreditCard_microdata$Name, CreditCard_microdata$Month, sep = "_"))
+
+# Create intData object by aggregating microdata using the default minmax criterion 
+# and using KDE for estimation of the latent distribution in the general case
+credit_agr <- micro2intData(CreditCard_microdata[,3:7],
+                            agrby = credit_agrby,
+                            LatentCase = "General")
 
 }
 \references{

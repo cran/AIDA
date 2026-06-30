@@ -2,18 +2,18 @@
 % Please edit documentation in R/intData_class.r
 \name{tail,intData-method}
 \alias{tail,intData-method}
-\title{Tail Method for \linkS4class{intData}}
+\title{Tail Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{tail}{intData}(x, n = min(nrow(x), 6L))
 }
 \arguments{
-\item{x}{An \linkS4class{intData} object.}
+\item{x}{An \code{\linkS4class{intData}} object.}
 
 \item{n}{The number of rows to return.}
 }
 \value{
-A subset of the \linkS4class{intData} object.
+A subset of the \code{\linkS4class{intData}} object.
 }
 \description{
-Returns the last \code{n} rows of an \linkS4class{intData} object.
+Returns the last \code{n} rows of an \code{\linkS4class{intData}} object.
 }

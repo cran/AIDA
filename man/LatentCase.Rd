@@ -3,18 +3,18 @@
 \name{LatentCase}
 \alias{LatentCase}
 \alias{LatentCase,intData-method}
-\title{Latent Case Method for \linkS4class{intData}}
+\title{Latent Case Method for \code{\linkS4class{intData}}}
 \usage{
 LatentCase(Sdt)
 
 \S4method{LatentCase}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A character with the latent case.
 }
 \description{
-Latent Case Method for \linkS4class{intData}
+Latent Case Method for \code{\linkS4class{intData}}
 }

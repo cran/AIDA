@@ -11,7 +11,7 @@ c_step(z, m, data)
 
 \item{m}{An integer specifying number of observations to use}
 
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
 A list of z, covariance, barycenter and robust distances

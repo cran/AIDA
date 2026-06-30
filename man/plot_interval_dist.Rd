@@ -33,7 +33,7 @@ plot_interval_dist(
 
 \item{color_label}{Character. Label for the color class. If NULL (default), no legend for the color class is shown.}
 
-\item{palette}{A vector with colors for each color class. If NULL (default), default \link[ggplot2:ggplot2-package]{ggplot2::ggplot2} colors are used.}
+\item{palette}{A vector with colors for each color class. If NULL (default), default \link[ggplot2:ggplot2]{ggplot2} colors are used.}
 
 \item{shape_class}{A vector indicating the shape class of each observation. If NULL (default), all points have the same shape.}
 
@@ -48,20 +48,26 @@ Returns a plot that displays the Interval-Mahalanobis distances for each observa
 Interval-Mahalanobis distance plot for interval-valued data.
 }
 \examples{
-#Create intData object
+# Create intData object
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-#Estimate the mean and covariance matrix
-credit_card_IMCD<-IMCD(credit_card_int, floor(nrow(credit_card_int)*0.75), "farness", 0.9)
-credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, 
-                                           p=credit_card_int@NIVar, cutoff_lvl = 0.9)
+# Compute robust distances using IMCD estimates of mean and covariance
+credit_card_dist <- IMah_dist(credit_card_int)
+
+# Detect outliers using farness cutoff
+credit_card_outliers <- int_outliers(credit_card_dist, 
+                                     cutoff = "farness", 
+                                     cutoff_lvl = 0.9)
+
+# Create a vector indicating if the observations are outliers or inliers 
+# based on the robust distance outlier detection
 credit_card_is_outliers <- as.character(credit_card_outliers$is_outlier)
 credit_card_is_outliers[credit_card_outliers$is_outlier] <- "Outlier"
 credit_card_is_outliers[!credit_card_outliers$is_outlier] <- "Inlier"
 
-#Plot Interval-Mahalanobis distance plot
-plot_interval_dist(credit_card_IMCD$robust_dist,
+# Plot Interval-Mahalanobis distance plot
+plot_interval_dist(credit_card_dist,
                    cutoff = credit_card_outliers$cutoff_value,
                    cutoff_label = c("0.9 farness"),
                    obs_names = rownames(credit_card_int),

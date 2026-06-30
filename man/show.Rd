@@ -3,7 +3,7 @@
 \name{show,intData-method}
 \alias{show,intData-method}
 \alias{show,summaryintData-method}
-\title{Show Method for \linkS4class{intData}}
+\title{Show Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{show}{intData}(object)
 
@@ -16,7 +16,7 @@
 The object itself, returned invisibly. Called for its side effects (printing).
 }
 \description{
-Show Method for \linkS4class{intData}
+Show Method for \code{\linkS4class{intData}}
 
-Show Method for Summary \linkS4class{intData}
+Show Method for Summary \code{\linkS4class{intData}}
 }

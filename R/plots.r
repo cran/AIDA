@@ -1,37 +1,52 @@
-#' Symbolic Biplot for Interval-valued Data
+#' @importFrom grDevices adjustcolor colorRampPalette rainbow
+#' @importFrom graphics par pairs rect lines text plot.default
+#' @importFrom ggplot2 ggplot aes theme theme_light theme_bw theme_minimal labs facet_wrap
+#' @importFrom ggplot2 element_text element_blank element_rect margin guides guide_legend
+#' @importFrom ggplot2 geom_point geom_tile geom_hline geom_vline geom_col geom_bar geom_segment geom_text
+#' @importFrom ggplot2 scale_fill_manual scale_fill_gradient2 scale_linetype_manual scale_color_manual scale_y_discrete scale_alpha_manual
+NULL
+
+#' Scatter Plot for Interval-valued Data
 #' 
-#' Create a biplot for interval-valued symbolic data, visualizing the symbolic data as rectangles or crosses, with the first two variables on the x and y axes. The function allows customization of colors, fill colors, and outlier representation.
+#' Create a scatter plot for interval-valued symbolic data, visualizing the symbolic data as rectangles or crosses, with the first two variables on the x and y axes. The function allows customization of colors, fill colors, and outlier representation.
 #' 
-#' @param data An \linkS4class{intData} object containing the macrodata/interval data. The first two variables are used for the x and y axes.
+#' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data. The first two variables are used for the x and y axes.
 #' @param type The type of plot to generate: "rectangles", "crosses" or "crosses2". Default is "rectangles".
 #' @param palette A vector with colors for each observation. Default is \code{rainbow(nrow(data))}.
 #' @param fill_col If \code{type="rectangles"}, a vector with colors for the fill of each observation, or a single color for all observations. Default is "gray50".
 #' @param is_outlier A vector with logical values indicating if the observation is an outlier or not. It makes the line width of the outlying observations thicker. Default is NULL.
 #' @param ... Additional graphical parameters.
-#' @return A biplot is drawn in the graphic window. The biplot shows the symbolic data as rectangles or crosses, with the first two variables on the x and y axes.
-#' @importFrom graphics rect lines
-#' @importFrom grDevices adjustcolor rainbow
+#' @return A scatter plot is drawn in the graphic window. The scatter plot shows the symbolic data as rectangles or crosses, with the first two variables on the x and y axes.
 #' @examples
 #' data(creditcard)
 #' credit_card_int <- creditcard$intData
 #' 
-#' SYMB.biplot(credit_card_int[,c(3,5)])
+#' plot_scatter_int(credit_card_int[, c(3, 5)])
 #' 
-#' # Highlight outliers in the biplot
-#' credit_card_IMCD <- IMCD(credit_card_int, floor(0.75*credit_card_int@NObs), "farness", 0.9)
-#' credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, "farness", 0.9)
-#' outliers_colors<-rep('gray50',credit_card_int@NObs)
-#' names(outliers_colors)<-rownames(credit_card_int)
+#' # Alternatively, highlight outliers in the scatter plot
+#' # Compute robust distances using IMCD estimates of mean and covariance
+#' credit_card_dist <- IMah_dist(credit_card_int)
+#' 
+#' # Detect outliers using farness cutoff
+#' credit_card_outliers <- int_outliers(credit_card_dist, "farness", 0.9)
+#' 
+#' outliers_colors <- rep('gray50', credit_card_int@NObs)
+#' names(outliers_colors) <- rownames(credit_card_int)
 #' outliers_colors[credit_card_outliers$outliers_names] = 'red'
-#' SYMB.biplot(credit_card_int[,c(3,5)], palette = outliers_colors, 
+#' 
+#' plot_scatter_int(credit_card_int[, c(3, 5)], 
+#'             palette = outliers_colors, 
 #'             is_outlier = credit_card_outliers$is_outlier)
 #' @export
-SYMB.biplot <- function(data,
+plot_scatter_int <- function(data,
                         type = c("rectangles", "crosses", "crosses2"),
                         palette = rainbow(nrow(data)),
                         fill_col = "gray50",
                         is_outlier = NULL,
                         ...) {
+
+  if(!inherits(data,"intData")) stop("Argument data is not an object of class intData\n")
+
   type <- match.arg(type)
 
   Lbnd <- LowerBounds(data)
@@ -85,7 +100,7 @@ SYMB.biplot <- function(data,
 #'
 #' Adapted from pairs.panels (R package "psych") shows a scatter plot of matrices, with bivariate symbolic scatter plots below the diagonal, variables' names on the diagonal, and all the symbolic correlations above the diagonal. Useful for descriptive statistics of symbolic objects described by interval variables.
 #' 
-#' @param data An \linkS4class{intData} object containing the macrodata/interval data
+#' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data
 #' @param type The type of plot to generate: "rectangles" or "crosses" or "crosses2". Default is "rectangles".
 #' @param cex.cor Character expansion factor
 #' @param corr A matrix with the symbolic correlations; if not provided the upper panel is omitted
@@ -94,27 +109,41 @@ SYMB.biplot <- function(data,
 #' @param is_outlier A vector with logical values indicating if the observation is an outlier or not. It makes the line width of the outlying observations thicker. Default is NULL.
 #' @param ... Additional graphical parameters.
 #' @return A scatter plot matrix is drawn in the graphic window. The lower off diagonal draws scatter plots, the diagonal variables' names, the upper off diagonal reports  all the symbolic correlations.
-#' @importFrom graphics pairs rect lines text par
-#' @importFrom grDevices adjustcolor colorRampPalette rainbow
 #' @examples
 #' data(creditcard)
 #' credit_card_int <- creditcard$intData
 #' 
-#' credit_card_cov<-int_cov(credit_card_int)
-#' credit_card_cor<-cov2cor(credit_card_cov)
-#' SYMB.pairs.panels(credit_card_int,corr=credit_card_cor,labels=colnames(credit_card_int))
+#' # Compute covariance and correlation matrices
+#' credit_card_cov <- int_cov(credit_card_int)
+#' credit_card_cor <- cov2cor(credit_card_cov)
+#' plot_pairs_int(credit_card_int,
+#'                   corr = credit_card_cor,
+#'                   labels = colnames(credit_card_int))
 #' 
-#' # Highlight outliers in the biplot
-#' credit_card_IMCD <- IMCD(credit_card_int, floor(0.75*credit_card_int@NObs), "farness", 0.9)
-#' credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, "farness", 0.9)
-#' outliers_colors<-rep('gray50',credit_card_int@NObs)
-#' names(outliers_colors)<-rownames(credit_card_int)
+#' # Alternatively, highlight outliers in the scatter plot and use the robust correlation matrix
+#' # Obtain reweighted IMCD estimates using farness cutoff
+#' credit_card_IMCD <- IMCD(credit_card_int, 
+#'                          m = floor(nrow(credit_card_int)*0.75), 
+#'                          cutoff = "farness", 
+#'                          cutoff_lvl = 0.9)
+#' 
+#' # Detect outliers using farness cutoff
+#' credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, 
+#'                                      cutoff = "farness", 
+#'                                      cutoff_lvl = 0.9)
+#' 
+#' outliers_colors <- rep('gray50',credit_card_int@NObs)
+#' names(outliers_colors) <- rownames(credit_card_int)
 #' outliers_colors[credit_card_outliers$outliers_names] = 'red'
-#' SYMB.pairs.panels(credit_card_int,corr=cov2cor(credit_card_IMCD$cov_IMCD), 
-#'                  palette = outliers_colors,labels=colnames(credit_card_int),
-#'                  type = "rectangles",is_outlier = credit_card_outliers$is_outlier)
+#' 
+#' plot_pairs_int(credit_card_int, 
+#'                   corr = cov2cor(credit_card_IMCD$cov_IMCD), 
+#'                   palette = outliers_colors,
+#'                   labels = colnames(credit_card_int),
+#'                   type = "rectangles",
+#'                   is_outlier = credit_card_outliers$is_outlier)
 #' @export
-SYMB.pairs.panels<-function (data,
+plot_pairs_int <- function (data,
                               type=c("rectangles","crosses","crosses2"),
                               cex.cor=2.0,
                               corr=NULL,
@@ -122,15 +151,18 @@ SYMB.pairs.panels<-function (data,
                               fill_col="gray50",
                               is_outlier=NULL,
                               ...){
+  
+  if(!inherits(data,"intData")) stop("Argument data is not an object of class intData\n")
+
   type <- match.arg(type)
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar), add = TRUE)
   
   "SYMB.panel.rect" <- function(x,y,n=length(x)/2, ...) {
-      xmin<-x[1:(length(x)/2)]
-      xmax<-x[(length(x)/2+1):length(x)]
-      ymin<-y[1:(length(y)/2)]
-      ymax<-y[(length(y)/2+1):length(y)]
+      xmin <- x[1:(length(x)/2)]
+      xmax <- x[(length(x)/2+1):length(x)]
+      ymin <- y[1:(length(y)/2)]
+      ymax <- y[(length(y)/2+1):length(y)]
 
       if (length(fill_col) == 1) fill_col <- rep(fill_col, n)
       if (is.null(is_outlier)) is_outlier <- rep(FALSE, n)
@@ -179,9 +211,9 @@ SYMB.pairs.panels<-function (data,
       rect(0, 0, 1, 1, col = color)
       text(0.5, 0.5, txt, cex = cex.cor)
   }
-  Lbnd<-LowerBounds(data); Ubnd<-UpperBounds(data)
-  names(Lbnd)<-names(Ubnd)<-colnames(data)
-  SYMB.matrix<-rbind(Lbnd,Ubnd)
+  Lbnd <- LowerBounds(data); Ubnd <- UpperBounds(data)
+  names(Lbnd) <- names(Ubnd) <- colnames(data)
+  SYMB.matrix <- rbind(Lbnd,Ubnd)
   if (is.null(corr)){
       pairs(SYMB.matrix, upper.panel = NULL, lower.panel = SYMB.panel.rect,  ...)
   }else{
@@ -205,30 +237,42 @@ SYMB.pairs.panels<-function (data,
 #' @param shape_class A vector indicating the shape class of each observation. If NULL (default), all points have the same shape.
 #' @param shape_label Character. Label for the shape class. If NULL (default), no legend for the shape class is shown.
 #' @param label_obs A vector with the names of the observations to be labeled in the plot when \code{ggplotly = FALSE}. Default is NULL.
-#' @import ggplot2
-#' @importFrom plotly ggplotly
-#' @importFrom ggrepel geom_text_repel
 #' @return Returns a Distance-Distance plot that displays the classical distances against the robust distances for each observation, highlighting outliers.
 #' @export
 #' @examples
-#' #Create intData object
+#' # Create intData object
 #' data(creditcard)
 #' credit_card_int <- creditcard$intData
 #' 
-#' #Estimate the mean and covariance matrix
-#' credit_card_IMCD<-IMCD(credit_card_int, floor(nrow(credit_card_int)*0.75), "farness", 0.9)
-#' credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, 
-#'                                            p=credit_card_int@NIVar, cutoff_lvl = 0.9)
+#' # Compute robust distances using IMCD estimates of mean and covariance
+#' credit_card_dist <- IMah_dist(credit_card_int)
 #' 
-#' #Plot Distance-Distance plot
-#' class_dist <- IMah_dist(credit_card_int, z=rep(1,credit_card_int@NObs))
-#' class_outliers <- int_outliers(class_dist,cutoff = "adjbox",p=p,cutoff_lvl = 1.5)
+#' # Detect outliers using farness cutoff
+#' credit_card_outliers <- int_outliers(credit_card_dist, 
+#'                                      cutoff = "farness", 
+#'                                      cutoff_lvl = 0.9)
+#' 
+#' # Compute classical distances and outliers
+#' class_dist <- IMah_dist(credit_card_int, z = rep(1,credit_card_int@NObs))
+#' class_outliers <- int_outliers(class_dist, 
+#'                                cutoff = "chi-squared", 
+#'                                p = credit_card_int@NIVar)
+#' 
+#' # Create a vector indicating if the observations are outliers or inliers 
+#' # based on the robust distance outlier detection
 #' credit_card_is_outliers <- as.character(credit_card_outliers$is_outlier)
 #' credit_card_is_outliers[credit_card_outliers$is_outlier] <- "Outlier"
 #' credit_card_is_outliers[!credit_card_outliers$is_outlier] <- "Inlier"
-#' plot_dist_dist(class_dist, class_outliers$cutoff_value[2], "1.5 adjusted boxplot",
-#'               credit_card_IMCD$robust_dist, credit_card_outliers$cutoff_value, "0.9 farness",
-#'               color_class = credit_card_is_outliers, palette = c("grey50", "red"))
+#' 
+#' # Plot Distance-Distance plot 
+#' plot_dist_dist(class_dist, 
+#'                class_cutoff = class_outliers$cutoff_value, 
+#'                class_cutoff_label = "0.975 chi-squared",
+#'                rob_dist = credit_card_dist, 
+#'                rob_cutoff = credit_card_outliers$cutoff_value, 
+#'                rob_cutoff_label = "0.9 farness",
+#'                color_class = credit_card_is_outliers, 
+#'                palette = c("grey50", "red"))
 plot_dist_dist <- function(class_dist, 
                           class_cutoff = NULL, 
                           class_cutoff_label = NULL,
@@ -236,7 +280,7 @@ plot_dist_dist <- function(class_dist,
                           rob_cutoff = NULL, 
                           rob_cutoff_label = NULL,
                           obs_names = NULL, 
-                          ggplotly = TRUE,
+                          ggplotly = FALSE,
                           color_class = NULL, 
                           color_label = NULL, 
                           palette = NULL,
@@ -245,8 +289,13 @@ plot_dist_dist <- function(class_dist,
                           label_obs = NULL){
   Classical <- Robust <- Name <- Color_Class <- Shape_Class  <- x  <- y  <- type <- NULL
 
+  if(length(class_dist)!=length(rob_dist)) stop("`class_dist` and `rob_dist` must match in length")
+
   if (is.null(obs_names)) {
     obs_names <- names(class_dist)
+    if (is.null(obs_names) || anyNA(obs_names) || all(obs_names == "")) {
+      obs_names <- as.character(seq_along(class_dist))
+    }
   }
 
   df <- data.frame(
@@ -374,6 +423,9 @@ plot_dist_dist <- function(class_dist,
 
   # Optional labeling of specific observations
   if (!ggplotly && !is.null(label_obs)) {
+    if (!requireNamespace("ggrepel", quietly = TRUE)) {
+      stop("Package 'ggrepel' is required for labeling functionality.")
+    }
     df_labeled <- subset(df, Name %in% label_obs)
     if (nrow(df_labeled) > 0) {
       p <- p +
@@ -390,6 +442,9 @@ plot_dist_dist <- function(class_dist,
 
   # Convert to plotly if requested
   if (ggplotly) {
+    if (!requireNamespace("plotly", quietly = TRUE)) {
+      stop("Package 'plotly' is required for interactive output.")
+    }
     plotly::ggplotly(p, tooltip = c("label", "x", "y"))
   } else {
     p
@@ -412,24 +467,27 @@ plot_dist_dist <- function(class_dist,
 #' @param label_obs A vector with the names of the observations to be labeled in the plot. If NULL (default), no labels are shown and x-axis labels are displayed.
 #' @return Returns a plot that displays the Interval-Mahalanobis distances for each observation, highlighting outliers based on specified cutoffs.
 #' @export
-#' @import ggplot2
-#' @importFrom ggrepel geom_text_repel
-#' @importFrom stats setNames
 #' @examples
-#' #Create intData object
+#' # Create intData object
 #' data(creditcard)
 #' credit_card_int <- creditcard$intData
 #' 
-#' #Estimate the mean and covariance matrix
-#' credit_card_IMCD<-IMCD(credit_card_int, floor(nrow(credit_card_int)*0.75), "farness", 0.9)
-#' credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, 
-#'                                            p=credit_card_int@NIVar, cutoff_lvl = 0.9)
+#' # Compute robust distances using IMCD estimates of mean and covariance
+#' credit_card_dist <- IMah_dist(credit_card_int)
+#' 
+#' # Detect outliers using farness cutoff
+#' credit_card_outliers <- int_outliers(credit_card_dist, 
+#'                                      cutoff = "farness", 
+#'                                      cutoff_lvl = 0.9)
+#' 
+#' # Create a vector indicating if the observations are outliers or inliers 
+#' # based on the robust distance outlier detection
 #' credit_card_is_outliers <- as.character(credit_card_outliers$is_outlier)
 #' credit_card_is_outliers[credit_card_outliers$is_outlier] <- "Outlier"
 #' credit_card_is_outliers[!credit_card_outliers$is_outlier] <- "Inlier"
 #' 
-#' #Plot Interval-Mahalanobis distance plot
-#' plot_interval_dist(credit_card_IMCD$robust_dist,
+#' # Plot Interval-Mahalanobis distance plot
+#' plot_interval_dist(credit_card_dist,
 #'                    cutoff = credit_card_outliers$cutoff_value,
 #'                    cutoff_label = c("0.9 farness"),
 #'                    obs_names = rownames(credit_card_int),
@@ -454,6 +512,9 @@ plot_interval_dist <- function(
 
   if (is.null(obs_names)) {
     obs_names <- names(dist)
+    if (is.null(obs_names) || anyNA(obs_names) || all(obs_names == "")) {
+      obs_names <- as.character(seq_along(dist))
+    }
   }
 
   df <- data.frame(
@@ -461,17 +522,6 @@ plot_interval_dist <- function(
     value = dist,
     stringsAsFactors = FALSE
   )
-
-  # Sort observations (and aesthetics!)
-  if (sort.obs) {
-    ord <- order(df$value, decreasing = TRUE)
-    df <- df[ord, ]
-
-    if (!is.null(color_class)) color_class <- color_class[ord]
-    if (!is.null(shape_class)) shape_class <- shape_class[ord]
-  }
-
-  df$obs <- factor(df$obs, levels = df$obs)
 
   # Color class
   if (!is.null(color_class)) {
@@ -486,6 +536,17 @@ plot_interval_dist <- function(
       stop("`shape_class` must match length of dist.")
     df$Shape_Class <- as.factor(shape_class)
   }
+
+  # Sort observations (and aesthetics!)
+  if (sort.obs) {
+    ord <- order(df$value, decreasing = TRUE)
+    df <- df[ord, ]
+
+    if (!is.null(color_class)) color_class <- color_class[ord]
+    if (!is.null(shape_class)) shape_class <- shape_class[ord]
+  }
+
+  df$obs <- factor(df$obs, levels = df$obs)
 
   p <- ggplot(df, aes(x = obs, y = value))
 
@@ -541,8 +602,10 @@ plot_interval_dist <- function(
 
   # Optional ggrepel labels
   if (!is.null(label_obs)) {
+    if (!requireNamespace("ggrepel", quietly = TRUE)) {
+      stop("Package 'ggrepel' is required for labeling functionality.")
+    }
     label_df <- df[df$obs %in% label_obs, , drop = FALSE]
-
     if (nrow(label_df) > 0) {
       p <- p +
         ggrepel::geom_text_repel(

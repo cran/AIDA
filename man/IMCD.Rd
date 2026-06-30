@@ -12,7 +12,7 @@ IMCD(
 )
 }
 \arguments{
-\item{data}{An \linkS4class{intData} object containing the interval-valued dataset (macrodata).}
+\item{data}{An \code{\linkS4class{intData}} object containing the interval-valued dataset (macrodata).}
 
 \item{m}{An integer specifying the subset size to use for the estimation. Defaults to \code{floor(0.75*n)}.}
 
@@ -55,7 +55,11 @@ Applies an adaptation of the FAST-MCD algorithm to estimate location and scatter
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-credit_card_IMCD <- IMCD(credit_card_int, floor(0.75*credit_card_int@NObs), "farness", 0.9)
+# Obtain reweighted IMCD estimates using farness cutoff
+credit_card_IMCD <- IMCD(credit_card_int, 
+                         m = floor(nrow(credit_card_int)*0.75), 
+                         cutoff = "farness", 
+                         cutoff_lvl = 0.9)
 }
 \references{
 Loureiro, C. P., Oliveira, M. R., Brito, P., & Oliveira, L. (2026).

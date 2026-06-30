@@ -13,7 +13,7 @@ bigIMCD(m, p, n, data)
 
 \item{n}{An integer specifying the number of total observations}
 
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
 A list of estimated location and scatter

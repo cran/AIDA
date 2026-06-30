@@ -2,13 +2,12 @@
 % Please edit documentation in R/intData_class.r
 \name{[,intData-method}
 \alias{[,intData-method}
-\alias{[,intData,ANY,ANY-method}
-\title{Subset an \linkS4class{intData} Object}
+\title{Subset an \code{\linkS4class{intData}} Object}
 \usage{
 \S4method{[}{intData}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
-\item{x}{An \linkS4class{intData} object.}
+\item{x}{An \code{\linkS4class{intData}} object.}
 
 \item{i}{Row indices or names to subset. Defaults to all rows.}
 
@@ -19,8 +18,8 @@
 \item{drop}{Logical, passed to the underlying \code{[}. Defaults to \code{TRUE}.}
 }
 \value{
-An \linkS4class{intData} object containing the specified subset of rows and columns.
+An \code{\linkS4class{intData}} object containing the specified subset of rows and columns.
 }
 \description{
-Extract a subset of rows and columns from an \linkS4class{intData} object.
+Extract a subset of rows and columns from an \code{\linkS4class{intData}} object.
 }

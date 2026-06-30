@@ -2,16 +2,16 @@
 % Please edit documentation in R/intData_class.r
 \name{summary,intData-method}
 \alias{summary,intData-method}
-\title{Summary Method for \linkS4class{intData}}
+\title{Summary Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{summary}{intData}(object)
 }
 \arguments{
-\item{object}{An object of class \linkS4class{intData}.}
+\item{object}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 An object of class \code{summaryintData}.
 }
 \description{
-Summary Method for \linkS4class{intData}
+Summary Method for \code{\linkS4class{intData}}
 }

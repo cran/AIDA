@@ -2,16 +2,16 @@
 % Please edit documentation in R/intData_class.r
 \name{ncol,intData-method}
 \alias{ncol,intData-method}
-\title{Number of Columns Method for \linkS4class{intData}}
+\title{Number of Columns Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{ncol}{intData}(x)
 }
 \arguments{
-\item{x}{An object of class \linkS4class{intData}.}
+\item{x}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 The number of columns.
 }
 \description{
-Number of Columns Method for \linkS4class{intData}
+Number of Columns Method for \code{\linkS4class{intData}}
 }

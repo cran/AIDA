@@ -25,7 +25,8 @@ This function calculates the mean of \eqn{\boldsymbol{X}} in function of \eqn{\b
 n <- 100
 p <- 4
 X <- matrix(rnorm(n * p), ncol = p)
-#if we consider all the observations the result obtained is the same as colMeans()
+
+# if we consider all the observations the result obtained is the same as colMeans()
 z <- c(rep(1, n))
 int_mean_z(z, X)
 colMeans(X)

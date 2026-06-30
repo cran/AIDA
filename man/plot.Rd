@@ -3,7 +3,7 @@
 \name{plot,intData,intData-method}
 \alias{plot,intData,intData-method}
 \alias{plot,intData,missing-method}
-\title{Plot Method for Two \linkS4class{intData} Objects}
+\title{Plot Method for Two \code{\linkS4class{intData}} Objects}
 \usage{
 \S4method{plot}{intData,intData}(
   x,
@@ -23,9 +23,9 @@
 )
 }
 \arguments{
-\item{x}{An \linkS4class{intData} object.}
+\item{x}{An \code{\linkS4class{intData}} object.}
 
-\item{y}{An \linkS4class{intData} object to plot on the y-axis.}
+\item{y}{An \code{\linkS4class{intData}} object to plot on the y-axis.}
 
 \item{type}{The type of plot to generate: "crosses" or "rectangles" or "crosses2". Default is "crosses".}
 
@@ -40,12 +40,12 @@
 \item{layout}{The layout of the plot: "vertical" or "horizontal".}
 }
 \value{
-A plot showing the relationship between the two \linkS4class{intData} objects.
+A plot showing the relationship between the two \code{\linkS4class{intData}} objects.
 
-A plot showing the intervals of the \linkS4class{intData} object.
+A plot showing the intervals of the \code{\linkS4class{intData}} object.
 }
 \description{
-Plots one \linkS4class{intData} object against another, with options to visualize the intervals as crosses or rectangles.
+Plots one \code{\linkS4class{intData}} object against another, with options to visualize the intervals as crosses or rectangles.
 
-Plots a single \linkS4class{intData} object, either in a vertical or horizontal layout.
+Plots a single \code{\linkS4class{intData}} object, either in a vertical or horizontal layout.
 }

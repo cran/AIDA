@@ -3,18 +3,18 @@
 \name{LatentParam}
 \alias{LatentParam}
 \alias{LatentParam,intData-method}
-\title{Latent Parameters Method for \linkS4class{intData}}
+\title{Latent Parameters Method for \code{\linkS4class{intData}}}
 \usage{
 LatentParam(Sdt)
 
 \S4method{LatentParam}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A list with the latent parameters.
 }
 \description{
-Latent Parameters Method for \linkS4class{intData}
+Latent Parameters Method for \code{\linkS4class{intData}}
 }

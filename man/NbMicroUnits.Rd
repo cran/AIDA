@@ -3,18 +3,18 @@
 \name{NbMicroUnits}
 \alias{NbMicroUnits}
 \alias{NbMicroUnits,intData-method}
-\title{Number of Micro Units Method for \linkS4class{intData}}
+\title{Number of Micro Units Method for \code{\linkS4class{intData}}}
 \usage{
 NbMicroUnits(x)
 
 \S4method{NbMicroUnits}{intData}(x)
 }
 \arguments{
-\item{x}{An object of class \linkS4class{intData}.}
+\item{x}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 An integer specifying the number of micro units.
 }
 \description{
-Number of Micro Units Method for \linkS4class{intData}
+Number of Micro Units Method for \code{\linkS4class{intData}}
 }

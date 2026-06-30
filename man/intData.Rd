@@ -5,7 +5,7 @@
 \title{Interval Data Constructor}
 \usage{
 intData(
-  Data,
+  macrodata,
   Seq = c("AllLb_AllUb", "AllCen_AllRng", "LbUb_VarbyVar", "CenRng_VarbyVar"),
   LatentParam = NULL,
   LatentCase = c("U_id_symmetric", "U_id", "General"),
@@ -16,12 +16,12 @@ intData(
   Umicro = NULL,
   estimate.DistParam = FALSE,
   VarNames = NULL,
-  ObsNames = row.names(Data),
+  ObsNames = row.names(macrodata),
   NbMicroUnits = integer(0)
 )
 }
 \arguments{
-\item{Data}{A data frame or matrix containing the data.}
+\item{macrodata}{A data frame or matrix containing the macrodata.}
 
 \item{Seq}{Format of macrodata if it is a data frame or matrix. Available options are:
 \itemize{
@@ -31,17 +31,19 @@ intData(
 \item \code{"CenRng_VarbyVar"}: Centers followed by Ranges, variable by variable.
 }}
 
-\item{LatentParam}{A list with the parameters of the latent variables.}
+\item{LatentParam}{A list with the parameters of the latent variables.
+Expects a list with a single number if \code{LatentCase} is \code{"U_id_symmetric"}, a list of two numbers if \code{LatentCase} is \code{"U_id"}, and a list of two matrices if \code{LatentCase} is \code{"General"}.}
 
 \item{LatentCase}{A string specifying which of the three scenarios applies to the latent variables:
 \itemize{
-\item \code{"General"}: The case where the latent variables do not have any nice properties.
-\item \code{"U_id"}: The case where the latent variables are identically distributed.
 \item \code{"U_id_symmetric"}: The case where the latent variables are identically distributed and symmetric.
+\item \code{"U_id"}: The case where the latent variables are identically distributed.
+\item \code{"General"}: The case where the latent variables do not have any nice properties.
 }
 Defaults to \code{"U_id_symmetric"}.}
 
-\item{LatentDist}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"},\code{"Triang"},\code{"TNorm"},\code{"InvTri"},\code{"Beta"},\code{"KDE"},\code{"Degenerated"}), if not a vector must be provided with the distribution for each variable.}
+\item{LatentDist}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"}, \code{"Triang"}, \code{"TNorm"}, \code{"InvTri"}, \code{"Beta"}, \code{"KDE"}, \code{"Degenerated"}), if not a vector must be provided with the distribution for each variable.
+The default is \code{"Unif"} if \code{LatentCase="U_id_symmetric"} or if \code{Umicro} is not provided, and \code{"KDE"} if \code{LatentCase="General"}.}
 
 \item{TriangParam}{Mode of the triangular distribution. If the latent variables are identically distributed, it is only necessary to provide a number, if not a vector is needed.
 The default is \code{0}.}
@@ -52,7 +54,8 @@ The default is \code{1}.}
 \item{BetaParam.b}{Parameter beta of the Beta distribution. If the latent variables are identically distributed, it is only necessary to provide a number, if not a vector is needed.
 The default is \code{1}.}
 
-\item{Umicro}{Latent microdata observations. Needed if \code{LatentDist="KDE"} or \code{estimate.DistParam=TRUE}.}
+\item{Umicro}{Latent microdata observations.
+Needed if \code{estimate.DistParam} is \code{TRUE} or \code{LatentDist} is \code{"KDE"}.}
 
 \item{estimate.DistParam}{Logical parameter indicating if estimation of the parameters of the latent distributions should be performed. Can only be set to TRUE if \code{LatentCase="General"}.
 The default is \code{FALSE}.}
@@ -61,13 +64,27 @@ The default is \code{FALSE}.}
 
 \item{ObsNames}{A character vector of observation names.}
 
-\item{NbMicroUnits}{An integer specifying the number of micro units.}
+\item{NbMicroUnits}{An integer vector indicating the number of individual observations (microdata) aggregated by interval (macrodata).}
 }
 \value{
-An object of class \linkS4class{intData}.
+An object of class \code{\linkS4class{intData}}.
 }
 \description{
 Constructs an interval data object.
+}
+\examples{
+# Load microdat and macrodata
+data(creditcard)
+CreditCard_microdata <- creditcard$microdata
+CreditCard_min_max <- creditcard$min_max
+
+# Create an intData object using the min_max component of the dataset 
+# Assume a continuous uniform distribution for the latent variables 
+# This corresponds to LatentCase="U_id_symmetric"
+# This is the default setting for the intData class
+credit_card_int_unif <- intData(CreditCard_min_max, 
+                                Seq = "LbUb_VarbyVar", 
+                                VarNames = colnames(CreditCard_microdata)[3:7])
 }
 \references{
 Oliveira, M. R., Pinheiro, D., & Oliveira, L. (2025).

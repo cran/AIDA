@@ -10,14 +10,14 @@ A list with the following components:
 \item{\code{microdata}}{A data frame with \code{1000} rows and \code{7} columns. It contains the microdata, with individual measurements of each variable for all observations.}
 \item{\code{min_max}}{A data frame with \code{36} rows and \code{10} columns. Each row corresponds to a different observation, and each column gives the minimum and maximum values for each variable.}
 \item{\code{centers_ranges}}{A data frame with \code{36} rows and \code{10} columns. Each row corresponds to the centers and ranges of the interval data.}
-\item{\code{intData}}{An \linkS4class{intData} object with \code{36} interval-valued observations and \code{5} variables, constructed assuming the microdata follow symmetric triangular distributions.}
+\item{\code{intData}}{An \code{\linkS4class{intData}} object with \code{36} interval-valued observations and \code{5} variables, constructed assuming the microdata follow symmetric triangular distributions.}
 }
 }
 \usage{
 data(creditcard)
 }
 \description{
-This dataset contains interval data of credit card expenses, including min-max values, centers and ranges, microdata, and an \linkS4class{intData} object.
+This dataset contains interval data of credit card expenses, including min-max values, centers and ranges, microdata, and an \code{\linkS4class{intData}} object.
 It is composed of 5 variables: Food, Social, Travel, Gas, and Clothes. It was aggregated by person-month.
 }
 \examples{

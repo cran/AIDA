@@ -15,7 +15,7 @@ get_latent_var(
 \arguments{
 \item{microdata}{A matrix containing the microdata.}
 
-\item{macrodata}{A data frame, matrix or \linkS4class{intData} object containing the macrodata/interval data.}
+\item{macrodata}{A data frame, matrix or \code{\linkS4class{intData}} object containing the macrodata/interval data.}
 
 \item{agrby}{A factor used to specify the grouping of the microdata.}
 
@@ -36,19 +36,26 @@ A matrix with the same size as the microdata.
 Obtain the latent variables inherent to the macrodata.
 }
 \details{
-The latent variables, \eqn{U_{ij}}, are defined according to the following model:
+The latent variables, \eqn{U_{j}}, are defined according to the following model:
 
 Let \eqn{X_j=(C_j,R_j)^\top=\left[C_j-\dfrac{R_j}{2}, C_j+\dfrac{R_j}{2}\right]} represent the \strong{macrodata} and
-\deqn{V_{ij}=C_j+U_{ij}\dfrac{R_j}{2},\quad j=1,\dots,p,\ i=1,\dots,m_j}
-the \strong{microdata} with \eqn{U_{ij}} being random variables with support on \eqn{[-1,1]}, uncorrelated with \eqn{(C_j,R_j)}.
+\deqn{V_{j}=C_j+U_{j}\dfrac{R_j}{2},\quad j=1,\dots,p,}
+the \strong{microdata} with \eqn{U_{j}} being random variables with support on \eqn{[-1,1]}, uncorrelated with \eqn{(C_j,R_j)}.
 }
 \examples{
 data(creditcard)
 CreditCard_min_max <- creditcard$min_max
 CreditCard_microdata <- creditcard$microdata
-credit_agrby<-paste(CreditCard_microdata$Name,CreditCard_microdata$Month,sep = "_")
-credit_card_U<-get_latent_var(CreditCard_microdata[,3:7], CreditCard_min_max, credit_agrby, 
-                              agrlevels = row.names(CreditCard_min_max), Seq="LbUb_VarbyVar")
+
+# Define grouping variable for microdata aggregation
+credit_agrby <- paste(CreditCard_microdata$Name, CreditCard_microdata$Month, sep = "_")
+
+# Obtain latent variables inherent to the macrodata (standardized to [-1,1])
+credit_card_U <- get_latent_var(microdata = CreditCard_microdata[,3:7], 
+                                macrodata = CreditCard_min_max, 
+                                agrby = credit_agrby, 
+                                agrlevels = row.names(CreditCard_min_max), 
+                                Seq = "LbUb_VarbyVar")
 }
 \references{
 Oliveira, M.R., Azeitona, M., Pacheco, A., Valadas, R.. Association measures for interval variables. Advances in Data Analysis and Classification 16, 491–520 (2022). \doi{10.1007/s11634-021-00445-8}

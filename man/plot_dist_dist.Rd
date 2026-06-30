@@ -12,7 +12,7 @@ plot_dist_dist(
   rob_cutoff = NULL,
   rob_cutoff_label = NULL,
   obs_names = NULL,
-  ggplotly = TRUE,
+  ggplotly = FALSE,
   color_class = NULL,
   color_label = NULL,
   palette = NULL,
@@ -36,13 +36,13 @@ plot_dist_dist(
 
 \item{obs_names}{A character vector containing the names of the observations. If NULL (default), the names are taken from the names of class_dist.}
 
-\item{ggplotly}{Logical. If \code{TRUE} (default), the plot is converted to an interactive \link[plotly:plotly]{plotly::plotly} object.}
+\item{ggplotly}{Logical. If \code{TRUE} (default), the plot is converted to an interactive \link[plotly:plotly]{plotly} object.}
 
 \item{color_class}{A vector indicating the color class of each observation. If NULL (default), all points have the same color.}
 
 \item{color_label}{Character. Label for the color class. If NULL (default), no legend for the color class is shown.}
 
-\item{palette}{A vector with colors for each color class. If NULL (default), default \link[ggplot2:ggplot2-package]{ggplot2::ggplot2} colors are used.}
+\item{palette}{A vector with colors for each color class. If NULL (default), default \link[ggplot2:ggplot2]{ggplot2} colors are used.}
 
 \item{shape_class}{A vector indicating the shape class of each observation. If NULL (default), all points have the same shape.}
 
@@ -57,22 +57,37 @@ Returns a Distance-Distance plot that displays the classical distances against t
 Distance-Distance plot for interval-valued data.
 }
 \examples{
-#Create intData object
+# Create intData object
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-#Estimate the mean and covariance matrix
-credit_card_IMCD<-IMCD(credit_card_int, floor(nrow(credit_card_int)*0.75), "farness", 0.9)
-credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, 
-                                           p=credit_card_int@NIVar, cutoff_lvl = 0.9)
+# Compute robust distances using IMCD estimates of mean and covariance
+credit_card_dist <- IMah_dist(credit_card_int)
 
-#Plot Distance-Distance plot
-class_dist <- IMah_dist(credit_card_int, z=rep(1,credit_card_int@NObs))
-class_outliers <- int_outliers(class_dist,cutoff = "adjbox",p=p,cutoff_lvl = 1.5)
+# Detect outliers using farness cutoff
+credit_card_outliers <- int_outliers(credit_card_dist, 
+                                     cutoff = "farness", 
+                                     cutoff_lvl = 0.9)
+
+# Compute classical distances and outliers
+class_dist <- IMah_dist(credit_card_int, z = rep(1,credit_card_int@NObs))
+class_outliers <- int_outliers(class_dist, 
+                               cutoff = "chi-squared", 
+                               p = credit_card_int@NIVar)
+
+# Create a vector indicating if the observations are outliers or inliers 
+# based on the robust distance outlier detection
 credit_card_is_outliers <- as.character(credit_card_outliers$is_outlier)
 credit_card_is_outliers[credit_card_outliers$is_outlier] <- "Outlier"
 credit_card_is_outliers[!credit_card_outliers$is_outlier] <- "Inlier"
-plot_dist_dist(class_dist, class_outliers$cutoff_value[2], "1.5 adjusted boxplot",
-              credit_card_IMCD$robust_dist, credit_card_outliers$cutoff_value, "0.9 farness",
-              color_class = credit_card_is_outliers, palette = c("grey50", "red"))
+
+# Plot Distance-Distance plot 
+plot_dist_dist(class_dist, 
+               class_cutoff = class_outliers$cutoff_value, 
+               class_cutoff_label = "0.975 chi-squared",
+               rob_dist = credit_card_dist, 
+               rob_cutoff = credit_card_outliers$cutoff_value, 
+               rob_cutoff_label = "0.9 farness",
+               color_class = credit_card_is_outliers, 
+               palette = c("grey50", "red"))
 }

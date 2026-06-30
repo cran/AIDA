@@ -3,18 +3,18 @@
 \name{LowerBounds}
 \alias{LowerBounds}
 \alias{LowerBounds,intData-method}
-\title{Lower Bounds Method for \linkS4class{intData}}
+\title{Lower Bounds Method for \code{\linkS4class{intData}}}
 \usage{
 LowerBounds(Sdt)
 
 \S4method{LowerBounds}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A \code{data.frame} containing the lower bounds of the intervals.
 }
 \description{
-Lower Bounds Method for \linkS4class{intData}
+Lower Bounds Method for \code{\linkS4class{intData}}
 }

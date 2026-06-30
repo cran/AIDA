@@ -3,18 +3,18 @@
 \name{LogRanges}
 \alias{LogRanges}
 \alias{LogRanges,intData-method}
-\title{LogRanges Method for \linkS4class{intData}}
+\title{LogRanges Method for \code{\linkS4class{intData}}}
 \usage{
 LogRanges(Sdt)
 
 \S4method{LogRanges}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A \code{data.frame} containing the logarithms of the ranges.
 }
 \description{
-LogRanges Method for \linkS4class{intData}
+LogRanges Method for \code{\linkS4class{intData}}
 }

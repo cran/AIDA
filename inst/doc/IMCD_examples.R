@@ -24,11 +24,11 @@ cars_outliers_colors <- rep('gray50', cars_int@NObs)
 names(cars_outliers_colors) <- rownames(cars_int)
 cars_outliers_colors[cars_outliers$outliers_names] <- 'red'
 
-SYMB.pairs.panels(cars_int, palette = cars_outliers_colors, type = "rectangles", 
+plot_pairs_int(cars_int, palette = cars_outliers_colors, type = "rectangles", 
                     corr = cov2cor(cars_IMCD$cov_IMCD), labels = colnames(cars_int),
                     is_outlier = cars_outliers$is_outlier, gap = 0)
 
-## -----------------------------------------------------------------------------
+## ----eval = requireNamespace("ggrepel", quietly = TRUE) && requireNamespace("robustbase", quietly = TRUE)----
 # Classical distances and outliers
 cars_class_dist <- IMah_dist(cars_int, z = rep(1,cars_int@NObs))
 cars_class_outliers <- int_outliers(cars_class_dist, cutoff = "adjbox", cutoff_lvl = 1.5)
@@ -59,7 +59,7 @@ spotify_outliers$outliers_names
 spotify_outliers_2 <- int_outliers(spotify_IMCD$robust_dist, cutoff = "farness", cutoff_lvl = 0.9)
 spotify_outliers_2$outliers_names[!spotify_outliers_2$outliers_names%in%spotify_outliers$outliers_names]
 
-## ----fig.width=9--------------------------------------------------------------
+## ----eval = requireNamespace("corrplot", quietly = TRUE), fig.width=9---------
 # Compute correlation matrix from the robust covariance matrix
 spotify_corr <- cov2cor(spotify_IMCD$cov_IMCD)
 
@@ -79,7 +79,7 @@ corrplot::corrplot(
   number.cex = 1
 )
 
-## -----------------------------------------------------------------------------
+## ----eval = requireNamespace("ggrepel", quietly = TRUE) && requireNamespace("robustbase", quietly = TRUE)----
 # Classical distances and outliers
 spotify_class_dist <- IMah_dist(spotify_int, z = rep(1,spotify_int@NObs))
 spotify_class_outliers <- int_outliers(spotify_class_dist, cutoff = "adjbox")

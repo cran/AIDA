@@ -7,9 +7,10 @@
 IMah_dist_pairs(data, cov = NULL)
 }
 \arguments{
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 
-\item{cov}{The symbolic covariance matrix}
+\item{cov}{(Optional) A covariance matrix. Defaults to \code{NULL}, in which case it will be computed
+using the \code{\link{IMCD}} function.}
 }
 \value{
 A matrix with the squared Interval-Mahalanobis distance of each pair of observations.
@@ -18,32 +19,38 @@ A matrix with the squared Interval-Mahalanobis distance of each pair of observat
 Calculate the squared Interval-Mahalanobis distance of all pairs of observations in the data.
 }
 \details{
-The squared Interval-Mahalanobis distance is defined according to the \code{LatentCase}:
+The squared Interval-Mahalanobis distance between \eqn{\boldsymbol{x}_1=(\boldsymbol{c}_1^\top,\boldsymbol{r}_1^\top)^\top} and \eqn{\boldsymbol{x}_2=(\boldsymbol{c}_2^\top,\boldsymbol{r}_2^\top)^\top} of a population with symbolic covariance matrix \eqn{\boldsymbol{\Sigma}_B} (see \code{\link{int_cov}}) is defined according to the \code{LatentCase}:
 \itemize{
 \item \code{"U_id_symmetric"}: The latent variables are identically distributed and symmetric:
-\deqn{d_{IMah}(\boldsymbol{x}_i,\boldsymbol{x}_j)^2=(\boldsymbol{c}_i-\boldsymbol{c}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_i-\boldsymbol{c}_j)+\delta(\boldsymbol{r}_i-\boldsymbol{r}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}_i-\boldsymbol{r}_j),}
+\deqn{d_\mathrm{IMah}(\boldsymbol{x}_1,\boldsymbol{x}_2)^2=(\boldsymbol{c}_1-\boldsymbol{c}_2)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_1-\boldsymbol{c}_2)+\delta(\boldsymbol{r}_1-\boldsymbol{r}_2)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}_1-\boldsymbol{r}_2),}
 where \eqn{\delta=\mathbb{E}(U^2)/4} is the parameter of the latent variables.
 \item \code{"U_id"}: The latent variables are identically distributed:
-\deqn{d_{IMah}(\boldsymbol{x}_i,\boldsymbol{x}_j)^2=(\boldsymbol{c}_i-\boldsymbol{c}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_i-\boldsymbol{c}_j)+\delta(\boldsymbol{r}_i-\boldsymbol{r}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}_i-\boldsymbol{r}_j)\\
-             +\dfrac{\mathbb{E}(U)}{2}(\boldsymbol{c}_i-\boldsymbol{c}_j)^\top\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}_i-\boldsymbol{r}_j)+\dfrac{\mathbb{E}(U)}{2}(\boldsymbol{r}_i-\boldsymbol{r}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_i-\boldsymbol{c}_j),}
+\deqn{\begin{aligned}
+             d_\mathrm{IMah}(\boldsymbol{x}_1,\boldsymbol{x}_2)^2&=(\boldsymbol{c}_1-\boldsymbol{c}_2)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_1-\boldsymbol{c}_2)+\delta(\boldsymbol{r}_1-\boldsymbol{r}_2)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}_1-\boldsymbol{r}_2)\\
+             &\quad+\mathbb{E}(U)(\boldsymbol{c}_1-\boldsymbol{c}_2)^\top\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}_1-\boldsymbol{r}_2),
+         \end{aligned}}
 where \eqn{\delta=\mathbb{E}(U^2)/4} and \eqn{\mathbb{E}(U)} are the parameter of the latent variables.
 \item \code{"General"}: The latent variables do not have any nice properties:
-\deqn{d_{IMah}(\boldsymbol{x}_i,\boldsymbol{x}_j)^2=(\boldsymbol{c}_i-\boldsymbol{c}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_i-\boldsymbol{c}_j)+\dfrac{1}{4}(\boldsymbol{r}_i-\boldsymbol{r}_j)^{\top}\left(\boldsymbol{\mathfrak{E}}_{UU}\bullet\boldsymbol{\Sigma}_{B}^{-1}\right)(\boldsymbol{r}_i-\boldsymbol{r}_j)\\
-             +\dfrac{1}{2}(\boldsymbol{c}_i-\boldsymbol{c}_j)^{\top}\boldsymbol{\Sigma}_{B}^{-1}\boldsymbol{\Psi}(\boldsymbol{r}_i-\boldsymbol{r}_j)+\dfrac{1}{2}(\boldsymbol{r}_i-\boldsymbol{r}_j)^{\top}\boldsymbol{\Psi}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_i-\boldsymbol{c}_j),}
+\deqn{\begin{aligned}
+             d_\mathrm{IMah}(\boldsymbol{x}_1,\boldsymbol{x}_2)^2&=(\boldsymbol{c}_1-\boldsymbol{c}_2)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}_1-\boldsymbol{c}_2)+\dfrac{1}{4}(\boldsymbol{r}_1-\boldsymbol{r}_2)^{\top}\left(\boldsymbol{\mathfrak{E}}_{UU}\bullet\boldsymbol{\Sigma}_{B}^{-1}\right)(\boldsymbol{r}_1-\boldsymbol{r}_2)\\
+             &\quad+(\boldsymbol{c}_1-\boldsymbol{c}_2)^{\top}\boldsymbol{\Sigma}_{B}^{-1}\boldsymbol{\Psi}(\boldsymbol{r}_1-\boldsymbol{r}_2),
+         \end{aligned}}
 where:
 \itemize{
 \item \eqn{\boldsymbol{\Psi}=\text{diag}(\mathbb{E}(U_1),\dots,\mathbb{E}(U_p))},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ij}=\mathcal{E}(U_i,U_j)}, \eqn{i\neq j}, with \eqn{\mathcal{E}(U_i,U_j)=\int_0^1 F_{U_i}^{-1}(t) F_{U_j}^{-1}(t) \, dt},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ii}=\mathbb{E}(U_i^2)}, \eqn{i,j=1,\dots,p},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{j\ell}=\mathcal{E}(U_j,U_\ell)}, \eqn{j\neq \ell}, with \eqn{\mathcal{E}(U_j,U_\ell)=\int_0^1 F_{U_j}^{-1}(t) F_{U_\ell}^{-1}(t) \, dt},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{jj}=\mathbb{E}(U_j^2)}, \eqn{j,\ell=1,\dots,p},
 \item \eqn{\bullet} denotes the Schur (or entrywise) product of matrices.
 }
 }
+If \code{cov} is not provided, it will be computed using the \code{\link{IMCD}} function.
+Additionally, if \code{cov} is set as the identity matrix, the computed distance is the Mallows distance between pairs of observations.
 }
 \examples{
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-credit_card_dist<-IMah_dist_pairs(credit_card_int)
+credit_card_dist <- IMah_dist_pairs(credit_card_int)
 }
 \references{
 Loureiro, C. P., Oliveira, M. R., Brito, P., & Oliveira, L. (2026).

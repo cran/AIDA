@@ -18,13 +18,14 @@ get_latent_param(
 \arguments{
 \item{LatentCase}{A string specifying which of the three scenarios applies to the latent variables:
 \itemize{
-\item \code{"General"}: The case where the latent variables do not have any nice properties.
-\item \code{"U_id"}: The case where the latent variables are identically distributed.
 \item \code{"U_id_symmetric"}: The case where the latent variables are identically distributed and symmetric.
+\item \code{"U_id"}: The case where the latent variables are identically distributed.
+\item \code{"General"}: The case where the latent variables do not have any nice properties.
 }
 Defaults to \code{"U_id_symmetric"}.}
 
-\item{LatentDist}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"},\code{"Triang"},\code{"TNorm"},\code{"InvTri"},\code{"Beta"},\code{"KDE"},\code{"Degenerated"}), if not a vector must be provided with the distribution for each variable.}
+\item{LatentDist}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"}, \code{"Triang"}, \code{"TNorm"}, \code{"InvTri"}, \code{"Beta"}, \code{"KDE"}, \code{"Degenerated"}), if not a vector must be provided with the distribution for each variable.
+The default is \code{"Unif"} if \code{LatentCase="U_id_symmetric"} or if \code{Umicro} is not provided, and \code{"KDE"} if \code{LatentCase="General"}.}
 
 \item{TriangParam}{Mode of the triangular distribution. If the latent variables are identically distributed, it is only necessary to provide a number, if not a vector is needed.
 The default is \code{0}.}
@@ -35,7 +36,8 @@ The default is \code{1}.}
 \item{BetaParam.b}{Parameter beta of the Beta distribution. If the latent variables are identically distributed, it is only necessary to provide a number, if not a vector is needed.
 The default is \code{1}.}
 
-\item{Umicro}{Latent microdata observations. Needed if \code{LatentDist="KDE"} or \code{estimate.DistParam=TRUE}.}
+\item{Umicro}{Latent microdata observations.
+Needed if \code{estimate.DistParam} is \code{TRUE} or \code{LatentDist} is \code{"KDE"}.}
 
 \item{p}{Number of variables.}
 
@@ -62,7 +64,7 @@ The parameters of the latent variables inherent to the macrodata are defined acc
 }
 \item \code{"General"}: The latent variables do not have any nice properties, so its parameters are:
 \itemize{
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ij}=\mathcal{E}(U_i,U_j)}, \eqn{i\neq j}, with \eqn{\mathcal{E}(U_i,U_j)=\int_0^1 F_{U_i}^{-1}(t) F_{U_j}^{-1}(t) \, dt}, and \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ii}=\mathbb{E}(U_i^2)}, \eqn{i,j=1,\dots,p}
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{j\ell}=\mathcal{E}(U_j,U_\ell)}, \eqn{j\neq \ell}, with \eqn{\mathcal{E}(U_j,U_\ell)=\int_0^1 F_{U_j}^{-1}(t) F_{U_\ell}^{-1}(t) \, dt}, and \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{jj}=\mathbb{E}(U_j^2)}, \eqn{j,\ell=1,\dots,p}
 \item \eqn{\boldsymbol{\Psi}=\text{Diag}(\mathbb{E}(U_1),\dots,\mathbb{E}(U_p))}
 }
 }
@@ -71,10 +73,21 @@ The parameters of the latent variables inherent to the macrodata are defined acc
 data(creditcard)
 CreditCard_min_max <- creditcard$min_max
 CreditCard_microdata <- creditcard$microdata
-credit_agrby<-paste(CreditCard_microdata$Name,CreditCard_microdata$Month,sep = "_")
-credit_card_U<-get_latent_var(CreditCard_microdata[,3:7], CreditCard_min_max, credit_agrby, 
-                              agrlevels = row.names(CreditCard_min_max), Seq="LbUb_VarbyVar")
-credit_card_param<-get_latent_param(LatentCase="General",LatentDist="KDE",Umicro=credit_card_U)
+
+# Define grouping variable for microdata aggregation
+credit_agrby <- paste(CreditCard_microdata$Name, CreditCard_microdata$Month, sep = "_")
+
+# Obtain latent variables inherent to the macrodata (standardized to [-1,1])
+credit_card_U <- get_latent_var(microdata = CreditCard_microdata[,3:7], 
+                                macrodata = CreditCard_min_max, 
+                                agrby = credit_agrby, 
+                                agrlevels = row.names(CreditCard_min_max), 
+                                Seq = "LbUb_VarbyVar")
+
+# Obtain parameters of the latent variables
+credit_card_param <- get_latent_param(LatentCase = "General",
+                                      LatentDist = "KDE",
+                                      Umicro = credit_card_U)
 }
 \references{
 Oliveira, M. R., Pinheiro, D., & Oliveira, L. (2025).

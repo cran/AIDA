@@ -22,10 +22,9 @@ data(creditcard)
 credit_card_int <- creditcard$intData
 
 # Compute squared Interval-Mahalanobis distance
-z <- rep(1, nrow(credit_card_int))
-credit_card_dist<-IMah_dist(credit_card_int,z)
+credit_card_dist <- IMah_dist(credit_card_int)
 
-credit_card_farness <- farness(credit_card_dist, 0.9)
+credit_card_farness <- farness(credit_card_dist, cutoff_value = 0.9)
 }
 \references{
 J. Raymaekers and P.J. Rousseeuw (2021). Transforming variables to central normality. Machine Learning. \doi{10.1007/s10994-021-05960-5}

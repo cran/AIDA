@@ -18,13 +18,13 @@ A class to represent interval data.
 
 \item{\code{LatentCase}}{A string specifying which of the three scenarios applies to the latent variables:
 \itemize{
-\item \code{"General"}: The case where the latent variables do not have any nice properties.
-\item \code{"U_id"}: The case where the latent variables are identically distributed.
 \item \code{"U_id_symmetric"}: The case where the latent variables are identically distributed and symmetric.
+\item \code{"U_id"}: The case where the latent variables are identically distributed.
+\item \code{"General"}: The case where the latent variables do not have any nice properties.
 }
 Defaults to \code{"U_id_symmetric"}.}
 
-\item{\code{LatentDist}}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"},\code{"Triang"},\code{"TNorm"},\code{"InvTri"},\code{"Beta"},\code{"KDE"},\code{"Degenerated"}), if not, it is a vector with the distribution for each variable.}
+\item{\code{LatentDist}}{A string or vector of strings specifying the distribution(s) of the latent variables. If the variables are identically distributed it can be one of (\code{"Unif"}, \code{"Triang"}, \code{"TNorm"}, \code{"InvTri"}, \code{"Beta"}, \code{"KDE"}, \code{"Degenerated"}), if not, it is a vector with the distribution for each variable.}
 
 \item{\code{ObsNames}}{A character vector of observation names.}
 
@@ -34,7 +34,7 @@ Defaults to \code{"U_id_symmetric"}.}
 
 \item{\code{NIVar}}{A numeric value indicating the number of interval variables.}
 
-\item{\code{NbMicroUnits}}{An integer indicating the number of micro units.}
+\item{\code{NbMicroUnits}}{An integer vector indicating the number of individual observations (microdata) aggregated by interval (macrodata).}
 }}
 
 \references{

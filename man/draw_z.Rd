@@ -9,7 +9,7 @@ draw_z(m, data)
 \arguments{
 \item{m}{An integer specifying the number of observations to use}
 
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
 A vector representing an m-length subset of X

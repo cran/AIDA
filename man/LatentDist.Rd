@@ -3,18 +3,18 @@
 \name{LatentDist}
 \alias{LatentDist}
 \alias{LatentDist,intData-method}
-\title{Latent Distribution Method for \linkS4class{intData}}
+\title{Latent Distribution Method for \code{\linkS4class{intData}}}
 \usage{
 LatentDist(Sdt)
 
 \S4method{LatentDist}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A character with the latent distribution(s).
 }
 \description{
-Latent Distribution Method for \linkS4class{intData}
+Latent Distribution Method for \code{\linkS4class{intData}}
 }

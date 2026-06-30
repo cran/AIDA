@@ -7,6 +7,8 @@ bibentry(
     person("Catarina P.", "Loureiro", role = c("aut", "cre"))
   ),
   year = "2026",
-  note = "R package version 0.1.5",
-  textVersion = "Loureiro C. P. (2026). AIDA: Analysis of Interval DAta. R package version 0.1.5."
+  doi = "10.32614/CRAN.package.AIDA",
+  url = "https://cran.r-project.org/package=AIDA",
+  note = "R package version 0.2.0",
+  textVersion = "Loureiro C. P. (2026). AIDA: Analysis of Interval DAta. R package version 0.2.0. https://cran.r-project.org/package=AIDA. doi:10.32614/CRAN.package.AIDA"
 )

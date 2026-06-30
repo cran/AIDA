@@ -7,16 +7,20 @@
 IMah_dist(data, z = NULL, mean_c = NULL, mean_r = NULL, cov = NULL)
 }
 \arguments{
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 
-\item{z}{A vector of 0 and 1, indicating which observations should be considered for the calculation.
-You must provide either \code{z} or (\code{mean_c}, \code{mean_r} and \code{cov})}
+\item{z}{(Optional) A vector of 0 and 1, indicating which observations should be considered for the calculation.
+If \code{z} is not \code{NULL}, \code{mean_c}, \code{mean_r}, and \code{cov} will be computed using only the observations with \code{z=1} (see \code{\link{int_mean_z}} and \code{\link{int_cov_z}}).
+Defaults to \code{NULL}.}
 
-\item{mean_c}{The mean vector of the centers}
+\item{mean_c}{(Optional) A vector specifying the mean of centers. Defaults to \code{NULL}, in which case
+it will be computed using the \code{\link{IMCD}} function, if \code{z} is also \code{NULL}.}
 
-\item{mean_r}{The mean vector of the ranges}
+\item{mean_r}{(Optional) A vector specifying the mean of ranges. Defaults to \code{NULL}, in which case
+it will be computed using the \code{\link{IMCD}} function, if \code{z} is also \code{NULL}.}
 
-\item{cov}{The symbolic covariance matrix}
+\item{cov}{(Optional) A covariance matrix. Defaults to \code{NULL}, in which case it will be computed
+using the \code{\link{IMCD}} function, if \code{z} is also \code{NULL}.}
 }
 \value{
 A vector with the squared Interval-Mahalanobis distance of each observation.
@@ -25,23 +29,27 @@ A vector with the squared Interval-Mahalanobis distance of each observation.
 Calculate the squared Interval-Mahalanobis distance of all rows in the data and the barycenter.
 }
 \details{
-The squared Interval-Mahalanobis distance is defined according to the \code{LatentCase}:
+The squared Interval-Mahalanobis distance between \eqn{\boldsymbol{x}=(\boldsymbol{c}^\top,\boldsymbol{r}^\top)^\top} and the barycenter \eqn{\boldsymbol{\mu}_B=(\boldsymbol{\mu}_C^\top,\boldsymbol{\mu}_R^\top)^\top} of a population with symbolic covariance matrix \eqn{\boldsymbol{\Sigma}_B} (see \code{\link{int_cov}}) is defined according to the \code{LatentCase}:
 \itemize{
 \item \code{"U_id_symmetric"}: The latent variables are identically distributed and symmetric:
-\deqn{d_{IMah}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}-\boldsymbol{\mu}_R),}
+\deqn{d_\mathrm{IMah}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}-\boldsymbol{\mu}_R),}
 where \eqn{\delta=\mathbb{E}(U^2)/4} is the parameter of the latent variables.
 \item \code{"U_id"}: The latent variables are identically distributed:
-\deqn{d_{IMah}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}-\boldsymbol{\mu}_R)\\
-             +\dfrac{\mathbb{E}(U)}{2}(\boldsymbol{c}-\boldsymbol{\mu}_C)^\top\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}-\boldsymbol{\mu}_R)+\dfrac{\mathbb{E}(U)}{2}(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C),}
+\deqn{\begin{aligned}
+             d_\mathrm{IMah}(\boldsymbol{x})^2&=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}-\boldsymbol{\mu}_R)\\
+             &\quad+\mathbb{E}(U)(\boldsymbol{c}-\boldsymbol{\mu}_C)^\top\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{r}-\boldsymbol{\mu}_R),
+    \end{aligned}}
 where \eqn{\delta=\mathbb{E}(U^2)/4} and \eqn{\mathbb{E}(U)} are the parameter of the latent variables.
 \item \code{"General"}: The latent variables do not have any nice properties:
-\deqn{d_{IMah}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\dfrac{1}{4}(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\left(\boldsymbol{\mathfrak{E}}_{UU}\bullet\boldsymbol{\Sigma}_{B}^{-1}\right)(\boldsymbol{r}-\boldsymbol{\mu}_R)\\
-             +\dfrac{1}{2}(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}\boldsymbol{\Psi}(\boldsymbol{r}-\boldsymbol{\mu}_R)+\dfrac{1}{2}(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Psi}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C),}
+\deqn{\begin{aligned}
+             d_\mathrm{IMah}(\boldsymbol{x})^2&=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\dfrac{1}{4}(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\left(\boldsymbol{\mathfrak{E}}_{UU}\bullet\boldsymbol{\Sigma}_{B}^{-1}\right)(\boldsymbol{r}-\boldsymbol{\mu}_R)\\
+             &\quad+(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Sigma}_{B}^{-1}\boldsymbol{\Psi}(\boldsymbol{r}-\boldsymbol{\mu}_R),
+   \end{aligned}}
 where:
 \itemize{
 \item \eqn{\boldsymbol{\Psi}=\text{diag}(\mathbb{E}(U_1),\dots,\mathbb{E}(U_p))},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ij}=\mathcal{E}(U_i,U_j)}, \eqn{i\neq j}, with \eqn{\mathcal{E}(U_i,U_j)=\int_0^1 F_{U_i}^{-1}(t) F_{U_j}^{-1}(t) \, dt},
-\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{ii}=\mathbb{E}(U_i^2)}, \eqn{i,j=1,\dots,p},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{j\ell}=\mathcal{E}(U_j,U_\ell)}, \eqn{j\neq \ell}, with \eqn{\mathcal{E}(U_j,U_\ell)=\int_0^1 F_{U_j}^{-1}(t) F_{U_\ell}^{-1}(t) \, dt},
+\item \eqn{[\boldsymbol{\mathfrak{E}}_{UU}]_{jj}=\mathbb{E}(U_j^2)}, \eqn{j,\ell=1,\dots,p},
 \item \eqn{\bullet} denotes the Schur (or entrywise) product of matrices.
 }
 }
@@ -50,8 +58,8 @@ where:
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-z <- rep(1, nrow(credit_card_int))
-credit_card_dist<-IMah_dist(credit_card_int,z)
+# Compute squared Interval-Mahalanobis distance using IMCD estimates of mean and covariance
+credit_card_dist <- IMah_dist(credit_card_int)
 }
 \references{
 Loureiro, C. P., Oliveira, M. R., Brito, P., & Oliveira, L. (2026).

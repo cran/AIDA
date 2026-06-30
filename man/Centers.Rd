@@ -3,18 +3,18 @@
 \name{Centers}
 \alias{Centers}
 \alias{Centers,intData-method}
-\title{Centers Method for \linkS4class{intData}}
+\title{Centers Method for \code{\linkS4class{intData}}}
 \usage{
 Centers(Sdt)
 
 \S4method{Centers}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A \code{data.frame} containing the centers of the intervals.
 }
 \description{
-Centers Method for \linkS4class{intData}
+Centers Method for \code{\linkS4class{intData}}
 }

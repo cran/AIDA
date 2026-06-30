@@ -10,7 +10,7 @@ A list with the following components:
 \item{\code{microdata_raw}}{A data frame with \code{26304} rows and \code{11} columns. It contains the raw microdata, with individual measurements of each variable for all observations.}
 \item{\code{microdata_transformed}}{A data frame with \code{26304} rows and \code{10} columns. It contains the microdata, with individual measurements of each variable for all observations. Logarithmic transformations were applied to all variables and interpolation to deal with missing values.}
 \item{\code{min_max}}{A data frame with \code{1096} rows and \code{17} columns. Each row corresponds to a different observation, and each column gives the minimum and maximum values for each variable. The first column corresponds to the day, the next 8 to the minimum and the last 8 to the maximum.}
-\item{\code{intData}}{An \linkS4class{intData} object, constructed using KDE for estimating the parameters of the latent distributions.}
+\item{\code{intData}}{An \code{\linkS4class{intData}} object, constructed using KDE for estimating the parameters of the latent distributions.}
 }
 }
 \usage{

@@ -73,6 +73,6 @@ credit_card_cor <- cov2cor(credit_card_cov)
 credit_card_cov
 
 ## ----fig.width=6, fig.height=6------------------------------------------------
-SYMB.pairs.panels(credit_card_int_agr, type = "rectangles", 
+plot_pairs_int(credit_card_int_agr, type = "rectangles", 
                     corr = credit_card_cor, labels = colnames(credit_card_int_agr))
 

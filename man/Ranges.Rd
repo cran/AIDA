@@ -3,18 +3,18 @@
 \name{Ranges}
 \alias{Ranges}
 \alias{Ranges,intData-method}
-\title{Ranges Method for \linkS4class{intData}}
+\title{Ranges Method for \code{\linkS4class{intData}}}
 \usage{
 Ranges(Sdt)
 
 \S4method{Ranges}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A \code{data.frame} containing the ranges of the intervals.
 }
 \description{
-Ranges Method for \linkS4class{intData}
+Ranges Method for \code{\linkS4class{intData}}
 }

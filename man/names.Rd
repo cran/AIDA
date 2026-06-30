@@ -2,16 +2,16 @@
 % Please edit documentation in R/intData_class.r
 \name{names,intData-method}
 \alias{names,intData-method}
-\title{Variable Names Method for \linkS4class{intData}}
+\title{Variable Names Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{names}{intData}(x)
 }
 \arguments{
-\item{x}{An object of class \linkS4class{intData}.}
+\item{x}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A character vector of variable names.
 }
 \description{
-Variable Names Method for \linkS4class{intData}
+Variable Names Method for \code{\linkS4class{intData}}
 }

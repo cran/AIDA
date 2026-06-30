@@ -2,16 +2,16 @@
 % Please edit documentation in R/intData_class.r
 \name{nrow,intData-method}
 \alias{nrow,intData-method}
-\title{Number of Rows Method for \linkS4class{intData}}
+\title{Number of Rows Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{nrow}{intData}(x)
 }
 \arguments{
-\item{x}{An object of class \linkS4class{intData}.}
+\item{x}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 The number of rows.
 }
 \description{
-Number of Rows Method for \linkS4class{intData}
+Number of Rows Method for \code{\linkS4class{intData}}
 }

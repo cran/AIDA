@@ -2,16 +2,16 @@
 % Please edit documentation in R/intData_class.r
 \name{dim,intData-method}
 \alias{dim,intData-method}
-\title{Dimensions Method for \linkS4class{intData}}
+\title{Dimensions Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{dim}{intData}(x)
 }
 \arguments{
-\item{x}{An object of class \linkS4class{intData}.}
+\item{x}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A vector of the number of rows and columns.
 }
 \description{
-Dimensions Method for \linkS4class{intData}
+Dimensions Method for \code{\linkS4class{intData}}
 }

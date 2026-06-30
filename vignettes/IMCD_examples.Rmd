@@ -61,14 +61,14 @@ cars_outliers_colors <- rep('gray50', cars_int@NObs)
 names(cars_outliers_colors) <- rownames(cars_int)
 cars_outliers_colors[cars_outliers$outliers_names] <- 'red'
 
-SYMB.pairs.panels(cars_int, palette = cars_outliers_colors, type = "rectangles", 
+plot_pairs_int(cars_int, palette = cars_outliers_colors, type = "rectangles", 
                     corr = cov2cor(cars_IMCD$cov_IMCD), labels = colnames(cars_int),
                     is_outlier = cars_outliers$is_outlier, gap = 0)
 ```
 
 Distance-distance plot of the classical versus robust squared Interval-Mahalanobis distances. The points' shape represents the car model class, the horizontal and vertical lines correspond to the 0.9 farness cutoff value and the 1.5 adjusted boxplot cutoff value, respectively, with the outliers marked in red.
 
-```{r}
+```{r eval = requireNamespace("ggrepel", quietly = TRUE) && requireNamespace("robustbase", quietly = TRUE)}
 # Classical distances and outliers
 cars_class_dist <- IMah_dist(cars_int, z = rep(1,cars_int@NObs))
 cars_class_outliers <- int_outliers(cars_class_dist, cutoff = "adjbox", cutoff_lvl = 1.5)
@@ -123,7 +123,7 @@ spotify_outliers_2$outliers_names[!spotify_outliers_2$outliers_names%in%spotify_
 
 Interval correlation matrix plot based on the IMCD estimates.
 
-```{r, fig.width=9}
+```{r eval = requireNamespace("corrplot", quietly = TRUE), fig.width=9}
 # Compute correlation matrix from the robust covariance matrix
 spotify_corr <- cov2cor(spotify_IMCD$cov_IMCD)
 
@@ -146,7 +146,7 @@ corrplot::corrplot(
 
 Distance-distance plot of the classical versus robust squared Interval-Mahalanobis distances for the Spotify dataset. The horizontal lines correspond to the $0.9$ and $0.95$ farness cutoff values, with the extreme outliers marked in red and the mild outliers in orange, while the vertical line represents the $1.5$ adjusted boxplot cutoff.
 
-```{r}
+```{r eval = requireNamespace("ggrepel", quietly = TRUE) && requireNamespace("robustbase", quietly = TRUE)}
 # Classical distances and outliers
 spotify_class_dist <- IMah_dist(spotify_int, z = rep(1,spotify_int@NObs))
 spotify_class_outliers <- int_outliers(spotify_class_dist, cutoff = "adjbox")

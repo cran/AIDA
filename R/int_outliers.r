@@ -40,8 +40,6 @@
 #'   \item{\code{cutoff_value}}{Cutoff value used for detecting outliers.}
 #'   \item{\code{farness_probs}}{Numeric vector of farness probabilities for each observation (only if \code{cutoff} is set to \code{"farness"}).}
 #' 
-#' @importFrom robustbase adjboxStats
-#' @importFrom stats qchisq qf qbeta
 #' @references Loureiro, C. P., Oliveira, M. R., Brito, P., & Oliveira, L. (2026). 
 #' Minimum Covariance Determinant Estimator and Outlier Detection for Interval-valued Data. 
 #' arXiv preprint arXiv:2604.26769. \url{https://arxiv.org/abs/2604.26769}
@@ -50,21 +48,26 @@
 #' # Example of detecting outliers using robust distances
 #' set.seed(42)
 #' robust_dist <- abs(rnorm(100))
-#' result <- int_outliers(robust_dist, cutoff="chi-squared", p=5)
+#' result <- int_outliers(robust_dist, cutoff = "chi-squared", p = 5)
 #' 
 #' # Example using creditcard dataset
 #' data(creditcard)
 #' credit_card_int <- creditcard$intData
 #' 
-#' credit_card_IMCD <- IMCD(credit_card_int, floor(0.75*credit_card_int@NObs), "farness", 0.9)
-#' credit_card_outliers <- int_outliers(credit_card_IMCD$robust_dist, "farness", 0.9)
+#' # Compute robust distances using IMCD estimates of mean and covariance
+#' credit_card_dist <- IMah_dist(credit_card_int)
+#' 
+#' # Detect outliers using farness cutoff
+#' credit_card_outliers <- int_outliers(credit_card_dist, 
+#'                                      cutoff = "farness", 
+#'                                      cutoff_lvl = 0.9)
 #' @export
 int_outliers <- function(robust_dist,
                         cutoff=c("farness","adjbox","chi-squared","F-dist"),
                         cutoff_lvl=NULL,
                         p=NULL,
                         z=NULL){
-    cutoff<-match.arg(cutoff)
+    cutoff <- match.arg(cutoff)
 
     if (is.null(cutoff_lvl)){
         cutoff_lvl <- switch(cutoff,
@@ -84,7 +87,10 @@ int_outliers <- function(robust_dist,
         cutoff_value <- qchisq(cutoff_lvl, df = p)
         w <- ifelse(robust_dist <= cutoff_value, FALSE, TRUE)
     }else if (cutoff=="adjbox"){
-        cutoff_value <- adjboxStats(robust_dist, coef=cutoff_lvl, doScale = FALSE)$fence
+        if (!requireNamespace("robustbase", quietly = TRUE)) {
+            stop("Package 'robustbase' is required for cutoff=='adjbox'.")
+        }
+        cutoff_value <- robustbase::adjboxStats(robust_dist, coef=cutoff_lvl, doScale = FALSE)$fence
         w <- ifelse((robust_dist >= cutoff_value[1])&(robust_dist <= cutoff_value[2]), FALSE, TRUE)
     }else if (cutoff=="F-dist"){
         critfcn <- function(mm, vv, ww) {

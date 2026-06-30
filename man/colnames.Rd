@@ -2,16 +2,16 @@
 % Please edit documentation in R/intData_class.r
 \name{colnames,intData-method}
 \alias{colnames,intData-method}
-\title{Column Names Method for \linkS4class{intData}}
+\title{Column Names Method for \code{\linkS4class{intData}}}
 \usage{
 \S4method{colnames}{intData}(x)
 }
 \arguments{
-\item{x}{An object of class \linkS4class{intData}.}
+\item{x}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A character vector of column names.
 }
 \description{
-Column Names Method for \linkS4class{intData}
+Column Names Method for \code{\linkS4class{intData}}
 }

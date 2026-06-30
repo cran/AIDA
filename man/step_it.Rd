@@ -11,10 +11,10 @@ step_it(z, m, data, it = 0)
 
 \item{m}{An integer specifying number of observations to use}
 
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 
 \item{it}{An optional integer specifying the number of C-steps to perform.
-With it = 0, C-step will be performed until convergence}
+With \code{it = 0}, C-step will be performed until convergence}
 }
 \value{
 A list of z, covariance, barycenter and robust distances

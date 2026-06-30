@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 library(AIDA)
 ```
 
-This vignette provides examples of how to use the `intData` class and related functions for handling interval-valued data. The `intData` class is designed to represent interval-valued data. The examples included here demonstrate how to create `intData` objects, compute summary statistics, and visualize interval-valued data using the `SYMB.pairs.panels` function. The dataset used in these examples is the *Credit Card* dataset, which is available in the package and can be loaded using `data("creditcard")`. The examples illustrate the basic functionalities of the `intData` class and how to work with interval-valued data in R.
+This vignette provides examples of how to use the `intData` class and related functions for handling interval-valued data. The `intData` class is designed to represent interval-valued data. The examples included here demonstrate how to create `intData` objects, compute summary statistics, and visualize interval-valued data using the `plot_pairs_int` function. The dataset used in these examples is the *Credit Card* dataset, which is available in the package and can be loaded using `data("creditcard")`. The examples illustrate the basic functionalities of the `intData` class and how to work with interval-valued data in R.
 
 For more details on the interval-valued data framework implemented in the package, please refer to @oliveira2025.
 
@@ -128,10 +128,10 @@ credit_card_cor <- cov2cor(credit_card_cov)
 credit_card_cov
 ```
 
-Finally, we can visualize the interval data using the `SYMB.pairs.panels` function, which creates a pairs plot for interval-valued data. The lower triangular shows scatter plots of the variables, while the upper triangular shows the interval correlation matrix.
+Finally, we can visualize the interval data using the `plot_pairs_int` function, which creates a pairs plot for interval-valued data. The lower triangular shows scatter plots of the variables, while the upper triangular shows the interval correlation matrix.
 
 ```{r, fig.width=6, fig.height=6}
-SYMB.pairs.panels(credit_card_int_agr, type = "rectangles", 
+plot_pairs_int(credit_card_int_agr, type = "rectangles", 
                     corr = credit_card_cor, labels = colnames(credit_card_int_agr))
 ```
 

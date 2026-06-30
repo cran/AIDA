@@ -7,11 +7,13 @@
 Mallows_dist(data, mean_c = NULL, mean_r = NULL)
 }
 \arguments{
-\item{data}{An \linkS4class{intData} object containing the macrodata/interval data}
+\item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 
-\item{mean_c}{The mean vector of the centers}
+\item{mean_c}{(Optional) A vector specifying the mean of centers. Defaults to \code{NULL}, in which case
+it will be computed using the sample mean of centers.}
 
-\item{mean_r}{The mean vector of the ranges}
+\item{mean_r}{(Optional) A vector specifying the mean of ranges Defaults to \code{NULL}, in which case
+it will be computed using the sample mean of ranges.}
 }
 \value{
 A vector with the squared Mallows distance of each observation.
@@ -23,14 +25,14 @@ Calculate the squared Mallows distance between all rows in data and the barycent
 The squared Mallows distance is defined according to the \code{LatentCase}:
 \itemize{
 \item \code{"U_id_symmetric"}: The latent variables are identically distributed and symmetric:
-\deqn{d_{M}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}(\boldsymbol{r}-\boldsymbol{\mu}_R),}
+\deqn{d_\mathrm{M}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}(\boldsymbol{r}-\boldsymbol{\mu}_R),}
 where \eqn{\delta=\mathbb{E}(U^2)/4} is the parameter of the latent variables.
 \item \code{"U_id"}: The latent variables are identically distributed:
-\deqn{d_{M}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}(\boldsymbol{r}-\boldsymbol{\mu}_R)
+\deqn{d_\mathrm{M}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}(\boldsymbol{c}-\boldsymbol{\mu}_C)+\delta(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}(\boldsymbol{r}-\boldsymbol{\mu}_R)
              +\mathbb{E}(U)(\boldsymbol{c}-\boldsymbol{\mu}_C)^\top(\boldsymbol{r}-\boldsymbol{\mu}_R),}
 where \eqn{\delta=\mathbb{E}(U^2)/4} and \eqn{\mathbb{E}(U)} are the parameter of the latent variables.
 \item \code{"General"}: The latent variables do not have any nice properties:
-\deqn{d_{M}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}(\boldsymbol{c}-\boldsymbol{\mu}_C)+(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Delta}(\boldsymbol{r}-\boldsymbol{\mu}_R)
+\deqn{d_\mathrm{M}(\boldsymbol{x})^2=(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}(\boldsymbol{c}-\boldsymbol{\mu}_C)+(\boldsymbol{r}-\boldsymbol{\mu}_R)^{\top}\boldsymbol{\Delta}(\boldsymbol{r}-\boldsymbol{\mu}_R)
              +(\boldsymbol{c}-\boldsymbol{\mu}_C)^{\top}\boldsymbol{\Psi}(\boldsymbol{r}-\boldsymbol{\mu}_R),}
 where:
 \itemize{
@@ -43,7 +45,7 @@ where:
 data(creditcard)
 credit_card_int <- creditcard$intData
 
-credit_card_dist<-Mallows_dist(credit_card_int)
+credit_card_dist <- Mallows_dist(credit_card_int)
 }
 \references{
 Oliveira, M. R., Pinheiro, D., & Oliveira, L. (2025).

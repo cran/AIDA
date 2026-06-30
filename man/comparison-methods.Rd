@@ -2,29 +2,25 @@
 % Please edit documentation in R/intData_class.r
 \name{==,intData,intData-method}
 \alias{==,intData,intData-method}
-\alias{==}
-\alias{==.intData}
 \alias{!=,intData,intData-method}
-\alias{!=}
-\alias{!=.intData}
-\title{Equality Comparison for \linkS4class{intData} Objects}
+\title{Equality Comparison for \code{\linkS4class{intData}} Objects}
 \usage{
 \S4method{==}{intData,intData}(e1, e2)
 
 \S4method{!=}{intData,intData}(e1, e2)
 }
 \arguments{
-\item{e1}{An \linkS4class{intData} object.}
+\item{e1}{An \code{\linkS4class{intData}} object.}
 
-\item{e2}{An \linkS4class{intData} object.}
+\item{e2}{An \code{\linkS4class{intData}} object.}
 }
 \value{
-A logical matrix indicating which elements are equal between the two \linkS4class{intData} objects.
+A logical matrix indicating which elements are equal between the two \code{\linkS4class{intData}} objects.
 
-A logical matrix indicating element-wise inequality of the two \linkS4class{intData} objects.
+A logical matrix indicating element-wise inequality of the two \code{\linkS4class{intData}} objects.
 }
 \description{
-Compare two \linkS4class{intData} objects for equality.
+Compare two \code{\linkS4class{intData}} objects for equality.
 
-Compare two \linkS4class{intData} objects for inequality.
+Compare two \code{\linkS4class{intData}} objects for inequality.
 }

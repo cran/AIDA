@@ -3,18 +3,18 @@
 \name{UpperBounds}
 \alias{UpperBounds}
 \alias{UpperBounds,intData-method}
-\title{Upper Bounds Method for \linkS4class{intData}}
+\title{Upper Bounds Method for \code{\linkS4class{intData}}}
 \usage{
 UpperBounds(Sdt)
 
 \S4method{UpperBounds}{intData}(Sdt)
 }
 \arguments{
-\item{Sdt}{An object of class \linkS4class{intData}.}
+\item{Sdt}{An object of class \code{\linkS4class{intData}}.}
 }
 \value{
 A \code{data.frame} containing the upper bounds of the intervals.
 }
 \description{
-Upper Bounds Method for \linkS4class{intData}
+Upper Bounds Method for \code{\linkS4class{intData}}
 }
