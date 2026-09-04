@@ -50,7 +50,7 @@ CreditCard_microdata <- creditcard$microdata
 # Define grouping variable for microdata aggregation
 credit_agrby <- paste(CreditCard_microdata$Name, CreditCard_microdata$Month, sep = "_")
 
-# Obtain latent variables inherent to the macrodata (standardized to [-1,1])
+# Obtain latent variables inherent to the macrodata (normalized to [-1,1])
 credit_card_U <- get_latent_var(microdata = CreditCard_microdata[,3:7], 
                                 macrodata = CreditCard_min_max, 
                                 agrby = credit_agrby, 

@@ -50,7 +50,7 @@ LowerBounds(credit_card_int_triang)[1:5,]
 UpperBounds(credit_card_int_triang)[1:5,]
 
 ## -----------------------------------------------------------------------------
-credit_card_int_KDE <- intData(CreditCard_CR, Seq = "LbUb_VarbyVar", 
+credit_card_int_KDE <- intData(CreditCard_CR, Seq = "AllCen_AllRng", 
                                 VarNames = colnames(CreditCard_microdata)[3:7], 
                                 LatentCase = "General", LatentDist = "KDE", Umicro = credit_card_U)
 

@@ -24,15 +24,16 @@
 #' The default is \code{1}.
 #' @param estimate.DistParam Logical parameter indicating if estimation of the parameters of the latent distributions should be performed. Can only be set to TRUE if \code{LatentCase="General"}.
 #' The default is \code{FALSE}.
+#' @param removeDegenerate Logical parameter indicating if observations with at least one degenerate interval should be removed. The default is \code{FALSE}.
 #'
-#' @return An \code{\linkS4class{intData}} object containing the aggregated interval-valued data, or \code{NULL} if all units lead to degenerate intervals.
+#' @return An \code{\linkS4class{intData}} object containing the aggregated interval-valued data. If \code{removeDegenerate} is \code{TRUE}, observations with degenerate intervals are removed, and \code{NULL} is returned if all observations are removed.
 #'
 #' 
 #' @details
 #' This function processes a data frame of microdata and aggregates it into interval-valued data according to the specified grouping factor and aggregation criteria. 
 #' It can handle different latent distribution cases and parameter settings.
 #' 
-#' If some rows contain invalid (non-finite or missing) values, those rows are removed before aggregation. If all rows in the resulting interval-valued data are degenerate (i.e., the lower bound equals the upper bound), the function will return \code{NULL}.
+#' If some rows contain invalid (non-finite or missing) values, those rows are removed before aggregation. Degenerate intervals (i.e., intervals whose lower and upper bounds are equal) can be removed by setting \code{removeDegenerate} to \code{TRUE}.
 #' 
 #' @references Adapted from package \code{MAINT.Data} (\url{https://cran.r-project.org/package=MAINT.Data}).
 #' 
@@ -59,11 +60,13 @@ micro2intData <- function(microdata,
                           TriangParam=0,
                           BetaParam.a=1,
                           BetaParam.b=1,
-                          estimate.DistParam=FALSE){
+                          estimate.DistParam=FALSE,
+                          removeDegenerate=FALSE){
   mcall <- match.call()$microdata
   if (length(mcall) > 1) mcall <- "microdata"
-  if (!(is.data.frame(microdata))) stop("First argument of AgMicroData must be a data frame.\n")
-  if (!is.data.frame(microdata)) microdata <- as.data.frame(microdata)
+  if (!(is.data.frame(microdata))) stop("First argument of micro2intData must be a data frame.\n")
+  if (!is.logical(removeDegenerate) || length(removeDegenerate) != 1L || is.na(removeDegenerate))
+    stop("Argument removeDegenerate must be a single non-missing logical value.\n")
   if (any(!sapply(seq_len(ncol(microdata)),function(ind) is.numeric(microdata[,ind])))){  
     stop(paste("Some of the columns of the",mcall,"data frame have non-numeric variables.\n"))
   }
@@ -71,10 +74,11 @@ micro2intData <- function(microdata,
   unvalidobs <- which(apply(microdata,1,function(v) all(!is.finite(v))))
   nunvalid <- length(unvalidobs) 
   if (nunvalid>0) {
+    invalid_names <- row.names(microdata)[unvalidobs]
     microdata <- microdata[-unvalidobs,]
     agrby <- agrby[-unvalidobs]
     string2 <- paste("rows of the",mcall,"data frame were dropped because they only included non-valid (non finite or missing values) observations.\n")
-    if (nunvalid<=10) warning(paste("The",paste(row.names(microdata)[unvalidobs],collapse=" "),string2))
+    if (nunvalid<=10) warning(paste("The",paste(invalid_names,collapse=" "),string2))
     else warning(paste(nunvalid,string2,collapse=" "))
   }
 
@@ -107,17 +111,17 @@ micro2intData <- function(microdata,
   grplvls <- levels(agrby)
   NIVar <- ncol(microdata)
 
-  # logical vector: TRUE = group is valid; FALSE = group has at least one variable all NA
+  # logical vector: TRUE = group is valid; FALSE = group has at least one variable all non-valid (non finite or missing values)
   keep_group <- sapply(grplvls, function(g) {
     rind <- which(agrby == g)
-    all_na_in_any_var <- any(sapply(1:NIVar, function(c) all(is.na(microdata[rind, c]))))
-    !all_na_in_any_var  # keep if FALSE
+    all_invalid_in_any_var  <- any(sapply(seq_len(NIVar), function(c) all(!is.finite(microdata[rind, c]))))
+    !all_invalid_in_any_var   # keep if FALSE
   })
 
   dropped_groups <- grplvls[!keep_group]
   if (length(dropped_groups) > 0) {
     warning(sprintf(
-      "Removed %d groups with at least one variable fully NA: %s",
+      "Removed %d groups with at least one variable fully non-valid (non finite or missing values): %s",
       length(dropped_groups),
       paste(dropped_groups, collapse = ", ")
     ))
@@ -149,30 +153,31 @@ micro2intData <- function(microdata,
   
   Umicro <- get_latent_var(microdata,bndsDF,agrby,agrlevels=grplvls,Seq="AllLb_AllUb")
   res <- intData(bndsDF,Seq="AllLb_AllUb",LatentParam,LatentCase,LatentDist,TriangParam,BetaParam.a,BetaParam.b,Umicro,estimate.DistParam,VarNames=names(microdata),ObsNames=grplvls)
-  DegInT <- which(apply(res@Ranges,1,function(v) any(v==0)))
-  nDegInT <- length(DegInT)
-  if (nDegInT>0) {
-    if (nDegInT==res@NObs) {
-      warning("No intData object was created because all units had some degenerate intervals")
-      return(NULL)
-    }
-    if (nDegInT<10) {
-      if (nDegInT==1) {
-        wmsg <- paste("Data unit",res@ObsNames[DegInT],"was eliminated because it lead to some degenerate intervals")
+  if (removeDegenerate) {
+    DegInT <- which(apply(res@Ranges,1,function(v) any(v==0)))
+    nDegInT <- length(DegInT)
+    if (nDegInT>0) {
+      if (nDegInT==res@NObs) {
+        warning("No intData object was created because all units had some degenerate intervals")
+        return(NULL)
+      }
+      if (nDegInT<10) {
+        if (nDegInT==1) {
+          wmsg <- paste("Data unit",res@ObsNames[DegInT],"was eliminated because it lead to some degenerate intervals")
+        } else {
+          wmsg <- paste(
+            "Data units",paste(res@ObsNames[DegInT],collapse=", "),"were eliminated because they lead to some degenerate intervals",sep="\n"
+          )
+        }
       } else {
-        wmsg <- paste(
-          "Data units",paste(res@ObsNames[DegInT],collapse=", "),"were eliminated because they lead to some degenerate intervals",sep="\n"
-        )
-      }  
-    } else {
-      wmsg <- paste(nDegInT,"data units were eliminated because they lead to some degenerate intervals")
+        wmsg <- paste(nDegInT,"data units were eliminated because they lead to some degenerate intervals")
+      }
+      warning(wmsg)
+      res <- res[-DegInT,]
+      NbMicroUnits <- NbMicroUnits[-DegInT]
     }
-    warning(wmsg)
-    res <- res[-DegInT,]
-    res@NbMicroUnits <- NbMicroUnits[-DegInT]
-  } else {
-    res@NbMicroUnits <- NbMicroUnits
-  }  
+  }
+  res@NbMicroUnits <- NbMicroUnits
   names(res@NbMicroUnits) <- res@ObsNames
   res
 }

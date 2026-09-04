@@ -4,7 +4,9 @@
 #' 
 #' @param dist Vector of distances of each observation.
 #' @param cutoff_value Optional cutoff value between 0 and 1 to flag outliers. If provided, the function returns both the farness probabilities and the cutoff distance value in the original distance scale.
-#' @return  Farness of each observation. Values between 0 and 1. If \code{cutoff_value} is provided, a list with the farness probabilities and the cutoff distance value in the original distance scale is returned.
+#' @return  Either a vector of farness probabilities for each observation (if \code{cutoff_value} is not provided) or a list containing (if \code{cutoff_value} is provided):
+#' \item{\code{farness_probs}}{A vector of farness probabilities for each observation. Values between 0 and 1.}
+#' \item{\code{cutoff_value}}{The cutoff distance value in the original distance scale corresponding to the specified \code{cutoff_value} probability.}
 #' @references J. Raymaekers and P.J. Rousseeuw (2021). Transforming variables to central normality. Machine Learning. \doi{10.1007/s10994-021-05960-5}
 #' @references Based on the \code{cellWise} package: Raymaekers J, Rousseeuw P (2023). _cellWise: Analyzing Data with Cellwise Outliers_. R package version 2.5.3, \url{https://CRAN.R-project.org/package=cellWise}.
 #' @export

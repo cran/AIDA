@@ -18,7 +18,7 @@ IMCD(
 
 \item{cutoff}{Indicates which cutoff should be considered for reweighting the estimates:
 \itemize{
-\item \code{"chi-squared"}: The traditional 97.5\\% Chi-Squared quantile.
+\item \code{"chi-squared"}: The traditional 97.5\% Chi-Squared quantile.
 \item \code{"raw"}: No reweighting.
 \item \code{"adjbox"}: Adjusted Boxplots (package \code{robustbase}).
 \item \code{"F-dist"}: The quantile of the scaled F distribution (adapted from package \code{CerioliOutlierDetection}).

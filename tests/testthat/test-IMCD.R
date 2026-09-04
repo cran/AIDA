@@ -49,10 +49,41 @@ test_that("IMCD supports adjbox, F-dist and farness cutoffs when dependencies ar
   expect_true(!is.null(res_far$cutoff_value) || is.na(res_far$cutoff_value))
 })
 
-test_that("IMCD throws error when data has only 1 variable", {
-  Data <- data.frame(L1 = c(1, 2), U1 = c(2, 3))
-  obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = c("X"), LatentParam = list(0.25), LatentCase = "U_id_symmetric", LatentDist = "Unif")
-  expect_error(IMCD(obj), "data needs to have at least 2 variables.")
+test_that("IMCD supports data with 1 variable", {
+  Data <- data.frame(
+    L1 = c(1, 2, 3, 4, 5, 6, 7, 8),
+    U1 = c(3, 4, 5, 6, 7, 8, 9, 10)
+  )
+  obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = "X",
+                 LatentParam = list(0.25), LatentCase = "U_id_symmetric",
+                 LatentDist = "Unif")
+
+  res <- IMCD(obj, cutoff = "raw")
+
+  expect_true(is.matrix(res$cov_IMCD))
+  expect_equal(dim(res$cov_IMCD), c(1, 1))
+  expect_length(res$mean_IMCD_c, 1)
+  expect_length(res$mean_IMCD_r, 1)
+})
+
+test_that("IMCD throws error when m<=p", {
+  Data <- data.frame(
+    L1 = c(1, 2, 3, 4, 5, 6), U1 = c(3, 4, 5, 6, 7, 8),
+    L2 = c(0, 1, 0, -1, -1, 1), U2 = c(2, 3, 3, 2, 3, 2)
+  )
+  obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = c("X", "Y"), LatentParam = list(0.25), LatentCase = "U_id_symmetric", LatentDist = "Unif")
+  
+  expect_error(IMCD(obj, m = obj@NIVar), "Subset size m must satisfy m > p for positive definiteness.")
+})
+
+test_that("IMCD defaults m to floor(0.75 * n) when m is NULL", {
+  Data <- data.frame(
+    L1 = c(1, 2, 3, 4, 5, 6), U1 = c(3, 4, 5, 6, 7, 8),
+    L2 = c(0, 1, 0, -1, -1, 1), U2 = c(2, 3, 3, 2, 3, 2)
+  )
+  obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = c("X", "Y"), LatentParam = list(0.25), LatentCase = "U_id_symmetric", LatentDist = "Unif")
+  res <- IMCD(obj, cutoff = "raw")
+  expect_equal(sum(res$final_z), floor(0.75 * obj@NObs))
 })
 
 test_that("IMCD uses bigIMCD for large samples and returns correct chi-squared cutoff", {

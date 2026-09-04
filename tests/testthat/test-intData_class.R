@@ -316,6 +316,17 @@ test_that("equality comparison and errors", {
   expect_error(a == c, "== only defined for equally-sized intData objects")
 })
 
+test_that("inequality comparison and errors", {
+  Data <- data.frame(L1 = 1:2, U1 = 2:3)
+  a <- intData(Data, VarNames = "X")
+  b <- intData(Data, VarNames = "X")
+  neq <- a != b
+  expect_true(all(!neq))
+  expect_error(a != 1, "comparison")
+  c <- intData(data.frame(L1 = 1:3, U1 = 2:4), VarNames = "X")
+  expect_error(a != c, "!= only defined for equally-sized intData objects")
+})
+
 test_that("indexing by character and numeric names", {
   Data <- data.frame(L1 = c(1,2,3), U1 = c(2,3,4))
   obj <- intData(Data, VarNames = "X", ObsNames = c("one","two","three"))

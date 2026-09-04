@@ -166,7 +166,7 @@ IMah_dist <- function(data,z=NULL,mean_c=NULL,mean_r=NULL,cov=NULL){
         psi <- param[[2]]
         C_0 <- t(C)-mean_c
         R_0 <- t(R)-mean_r
-        d2 <- mahalanobis(C, mean_c, cov) + 
+        d2 <- mahalanobis(C, mean_c, cov_inv, inverted = TRUE) + 
                 + 1/4*diag(crossprod(R_0,(e_UU*cov_inv)%*%R_0)) +
                 + diag(crossprod(C_0,cov_inv%*%psi%*%R_0))
     }

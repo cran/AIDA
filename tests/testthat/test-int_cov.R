@@ -53,6 +53,10 @@ test_that("int_cov errors when required arguments are missing", {
   expect_error(int_cov(data = 1:3), "Argument data is not an object of class intData")
 })
 
+test_that("int_cov errors when neitheir data nor the covariance matrices are provided", {
+  expect_error(int_cov(), "Must provide either an intData object or the covariance matrices and the latent variables parameters and case.")
+})
+
 test_that("int_cov_z computes sample covariance for U_id_symmetric", {
   C <- matrix(c(1, 2, 3, 4), nrow = 2)
   R <- matrix(c(1, 1, 2, 2), nrow = 2)

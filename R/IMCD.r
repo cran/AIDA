@@ -3,7 +3,7 @@
 #' @param z A vector of 0 and 1, indicating which observations should be considered for the calculation
 #' @param m An integer specifying number of observations to use
 #' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data
-#' @return A list of z, covariance, barycenter and robust distances
+#' @return A list of z (\code{updated_z}), covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 c_step <- function(z,m,data){
 
     d2 <- IMah_dist(data=data,z=z)
@@ -51,7 +51,7 @@ draw_z <- function(m,data){
 #' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data
 #' @param it An optional integer specifying the number of C-steps to perform.
 #' With `it = 0`, C-step will be performed until convergence
-#' @return A list of z, covariance, barycenter and robust distances
+#' @return A list of z (\code{updated_z}), covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 step_it <- function(z, m, data, it = 0){
     res <- c_step(z, m, data)
     det_new <- det(res$S)
@@ -79,7 +79,7 @@ step_it <- function(z, m, data, it = 0){
 #' @param z_all A 2D matrix where each row specifies a subset of observations
 #' @param m An integer specifying number of observations to use
 #' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data
-#' @return A list of z, covariance, barycenter and robust distances
+#' @return A list of z (\code{z}), covariance (\code{S}) and barycenter (\code{mean_c}, \code{mean_r})
 pick10 <- function(z_all, m, data){
     res <- apply(z_all, 2, function(z) {
         step_it(z, m, data, it = 2)
@@ -93,12 +93,12 @@ pick10 <- function(z_all, m, data){
     S <- lapply(res, function(x) {
         x$S
         })
-    mean_c <- sapply(res, function(x) {
+    mean_c <- do.call(cbind, lapply(res, function(x) {
         x$mean_c
-        })
-    mean_r <- sapply(res, function(x) {
+        }))
+    mean_r <- do.call(cbind, lapply(res, function(x) {
         x$mean_r
-    })
+    }))
     return(list(z = z[, head(order(det_S), 10)], S = S[head(order(det_S), 10)], 
                 mean_c = mean_c[, head(order(det_S), 10)], 
                 mean_r = mean_r[, head(order(det_S), 10)]))
@@ -108,7 +108,7 @@ pick10 <- function(z_all, m, data){
 #' @keywords internal
 #' @param m An integer specifying the number of observations to use
 #' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data
-#' @return A list of estimated barycenter and symbolic covariance matrix
+#' @return  A list of z (\code{updated_z}), estimated symbolic covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 smallIMCD <- function(m, data){
     
     # Sample initial subsets
@@ -134,7 +134,7 @@ smallIMCD <- function(m, data){
 #' @param p An integer specifying the number of columns in X
 #' @param n An integer specifying the number of total observations
 #' @param data An \code{\linkS4class{intData}} object containing the macrodata/interval data
-#' @return A list of estimated location and scatter
+#' @return A list of z (\code{updated_z}), estimated symbolic covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 bigIMCD <- function(m, p, n, data){
     k <- min(5, ceiling(n / 300))
     n_merge  <- min(1500, n)
@@ -216,7 +216,7 @@ bigIMCD <- function(m, p, n, data){
 #' @param m An integer specifying the subset size to use for the estimation. Defaults to `floor(0.75*n)`.
 #' @param cutoff Indicates which cutoff should be considered for reweighting the estimates:
 #' \itemize{
-#'    \item \code{"chi-squared"}: The traditional 97.5\% Chi-Squared quantile.
+#'    \item \code{"chi-squared"}: The traditional 97.5% Chi-Squared quantile.
 #'    \item \code{"raw"}: No reweighting.
 #'    \item \code{"adjbox"}: Adjusted Boxplots (package \code{robustbase}).
 #'    \item \code{"F-dist"}: The quantile of the scaled F distribution (adapted from package \code{CerioliOutlierDetection}).
@@ -269,8 +269,6 @@ IMCD <- function(data,
     R <- as.matrix(data@Ranges)
     n <- data@NObs; p <- data@NIVar
 
-    if(p==1){stop("data needs to have at least 2 variables.")}
-
     if (is.null(cutoff_lvl)){
         cutoff_lvl <- switch(cutoff,
                             "chi-squared" = 0.975,
@@ -284,6 +282,7 @@ IMCD <- function(data,
     if (!m) {
         m <- floor(0.75*n)
     }
+    if(m <= p) stop("Subset size m must satisfy m > p for positive definiteness.")
     
     # Call helper for big or small data
     if (m == n) {

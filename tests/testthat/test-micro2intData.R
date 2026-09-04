@@ -48,7 +48,7 @@ test_that("micro2intData stops if microdata is not a data frame", {
   MicroDt <- matrix(1:6, nrow=3, ncol=2)
   agrfct <- factor(c("A","B","C"))
   expect_error(micro2intData(MicroDt, agrfct), 
-               "First argument of AgMicroData must be a data frame")
+               "First argument of micro2intData must be a data frame")
 })
 
 test_that("micro2intData stops if non-numeric columns exist in microdata", {
@@ -108,10 +108,21 @@ test_that("micro2intData removes groups with all NA in a variable with warning",
   agrby <- factor(c("A", "B", "A"))
   
   expect_warning(micro2intData(MicroDt, agrby),
-                 "Removed .* groups with at least one variable fully NA")
+                 "Removed .* groups with at least one variable fully non-valid \\(non finite or missing values\\)")
   result <- suppressWarnings(micro2intData(MicroDt, agrby))
   expect_equal(nrow(result), 1)
   expect_equal(result@ObsNames, "A")
+})
+
+test_that("micro2intData retains all observations when intervals are degenerate by default", {
+  MicroDt <- data.frame(X=c(5,5,5,2,2,2), Y=c(10,10,10,20,20,20))
+  agrby <- factor(c("A","A","A","B","B","B"))
+  
+  result <- micro2intData(MicroDt, agrby)
+  expect_s4_class(result, "intData")
+  expect_equal(nrow(result), 2)
+  expect_equal(result@Ranges, data.frame(X.Ranges=c(0, 0), Y.Ranges=c(0, 0), row.names=c("A", "B")))
+  expect_equal(NbMicroUnits(result), c(A=3L, B=3L))
 })
 
 test_that("micro2intData returns NULL when all units lead to degenerate intervals", {
@@ -119,18 +130,20 @@ test_that("micro2intData returns NULL when all units lead to degenerate interval
   MicroDt <- data.frame(X=c(5,5,5,2,2,2), Y=c(10,10,10,20,20,20))
   agrby <- factor(c("A","A","A","B","B","B"))
   
-  result <- suppressWarnings(micro2intData(MicroDt, agrby))
+  result <- suppressWarnings(micro2intData(MicroDt, agrby, removeDegenerate=TRUE))
   expect_null(result)
 })
 
 test_that("micro2intData removes single degenerate interval with appropriate warning", {
   MicroDt <- data.frame(X=c(1, 2, 5, 5, 5), Y=c(1, 2, 10, 10, 10))
   agrby <- factor(c("A", "A", "B", "B", "B"))
-  
-  expect_warning(micro2intData(MicroDt, agrby),
+
+  expect_warning(micro2intData(MicroDt, agrby, removeDegenerate=TRUE),
                  "Data unit.*was eliminated because it lead to some degenerate intervals")
-  result <- suppressWarnings(micro2intData(MicroDt, agrby))
+
+  result <- suppressWarnings(micro2intData(MicroDt, agrby, removeDegenerate=TRUE))
   expect_equal(nrow(result), 1)
+  expect_equal(result@ObsNames, "A")
 })
 
 test_that("micro2intData removes multiple degenerate intervals (<10) with appropriate warning", {
@@ -138,9 +151,9 @@ test_that("micro2intData removes multiple degenerate intervals (<10) with approp
                         Y=c(1, 2, 10, 10, 10, 20, 20, 20))
   agrby <- factor(c("A", "A", "B", "B", "B", "C", "C", "C"))
   
-  expect_warning(micro2intData(MicroDt, agrby),
+  expect_warning(micro2intData(MicroDt, agrby, removeDegenerate=TRUE),
                  "Data units.*were eliminated because they lead to some degenerate intervals")
-  result <- suppressWarnings(micro2intData(MicroDt, agrby))
+  result <- suppressWarnings(micro2intData(MicroDt, agrby, removeDegenerate=TRUE))
   expect_equal(nrow(result), 1)
 })
 
@@ -151,9 +164,9 @@ test_that("micro2intData removes many degenerate intervals (>=10) with count war
   MicroDt <- data.frame(X=X, Y=Y)
   agrby <- factor(c(rep(LETTERS[1:12], each=1), rep("M", 19)))
   
-  expect_warning(micro2intData(MicroDt, agrby),
+  expect_warning(micro2intData(MicroDt, agrby, removeDegenerate=TRUE),
                  "12.*were eliminated because they lead to some degenerate intervals")
-  result <- suppressWarnings(micro2intData(MicroDt, agrby))
+  result <- suppressWarnings(micro2intData(MicroDt, agrby, removeDegenerate=TRUE))
   expect_equal(nrow(result), 1)
 })
 
@@ -200,6 +213,7 @@ test_that("micro2intData accepts General LatentCase", {
   result <- suppressWarnings(micro2intData(MicroDt, agrby, LatentCase="General"))
   expect_s4_class(result, "intData")
   expect_equal(result@LatentCase, "General")
+  expect_equal(result@LatentParam[[1]], matrix(0, nrow = 2, ncol = 2))
 })
 
 test_that("micro2intData defaults LatentDist to KDE when LatentCase is General", {

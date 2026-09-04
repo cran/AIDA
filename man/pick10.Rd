@@ -14,7 +14,7 @@ pick10(z_all, m, data)
 \item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
-A list of z, covariance, barycenter and robust distances
+A list of z (\code{z}), covariance (\code{S}) and barycenter (\code{mean_c}, \code{mean_r})
 }
 \description{
 Choose the 10 best estimates after iterating twice through initial sets

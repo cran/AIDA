@@ -20,6 +20,11 @@ test_that("int_outliers errors when p is missing for chi-squared and F-dist", {
   expect_error(int_outliers(robust_dist, cutoff = "F-dist"), "must provide the number of variables p")
 })
 
+test_that("int_outliers errors when z is missing for F-dist", {
+  robust_dist <- abs(rnorm(5))
+  expect_error(int_outliers(robust_dist, cutoff = "F-dist", p = 2), "you must provide z")
+})
+
 test_that("int_outliers adjbox returns fence when robustbase installed", {
   testthat::skip_if_not_installed("robustbase")
   robust_dist <- abs(rnorm(10))

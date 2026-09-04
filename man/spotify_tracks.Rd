@@ -20,6 +20,7 @@ data(spotify_tracks)
 This dataset contains interval data of Spotify tracks' audio features, including min-max values and trimmed intervals, as well as the microdata.
 It is composed of 11 audio features: duration, danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo, and popularity.
 The aggregation of the microdata was done by track genre.
+From the raw Kaggle dataset, the duplicates were removed and to handle tracks associated with multiple genres, robust centroids were estimated for each genre based on the single-genre tracks, and, then, multi-genre tracks were assigned to the closest genre according to the robust Mahalanobis distance.
 }
 \examples{
 data(spotify_tracks)

@@ -1,6 +1,6 @@
 #' @importFrom grDevices adjustcolor colorRampPalette rainbow
 #' @importFrom graphics par pairs rect lines text plot.default
-#' @importFrom ggplot2 ggplot aes theme theme_light theme_bw theme_minimal labs facet_wrap
+#' @importFrom ggplot2 ggplot aes theme theme_light theme_bw theme_minimal labs facet_wrap ylim
 #' @importFrom ggplot2 element_text element_blank element_rect margin guides guide_legend
 #' @importFrom ggplot2 geom_point geom_tile geom_hline geom_vline geom_col geom_bar geom_segment geom_text
 #' @importFrom ggplot2 scale_fill_manual scale_fill_gradient2 scale_linetype_manual scale_color_manual scale_y_discrete scale_alpha_manual

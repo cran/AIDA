@@ -17,7 +17,7 @@ step_it(z, m, data, it = 0)
 With \code{it = 0}, C-step will be performed until convergence}
 }
 \value{
-A list of z, covariance, barycenter and robust distances
+A list of z (\code{updated_z}), covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 }
 \description{
 Iterate through C-step

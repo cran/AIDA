@@ -100,6 +100,55 @@ test_that("IMah_dist computes the U_id case with explicit covariance", {
   expect_equal(result, expected)
 })
 
+test_that("IMah_dist computes the General case with explicit covariance", {
+  Data <- data.frame(L1 = c(1, 3), U1 = c(2, 5))
+  obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = "V",
+                 LatentParam = list(matrix(0.5,1,1), matrix(2,1,1)),
+                 LatentCase = "General", LatentDist = "KDE")
+  cov_mat <- diag(1, 1)
+  mean_c <- 2
+  mean_r <- 2
+
+  result <- IMah_dist(obj, mean_c = mean_c, mean_r = mean_r, cov = cov_mat)
+
+  # Compute expected result
+  C_0 <- t(obj@Centers)-mean_c
+  R_0 <- t(obj@Ranges)-mean_r
+  e_UU  <- obj@LatentParam[[1]]
+  psi <- obj@LatentParam[[2]]
+  cov_inv <- safe_solve_cov(cov_mat)
+  expected <- mahalanobis(obj@Centers, mean_c, cov_inv, inverted = TRUE) + 
+                + 1/4*diag(crossprod(R_0,(e_UU*cov_inv)%*%R_0)) +
+                + diag(crossprod(C_0,cov_inv%*%psi%*%R_0))
+
+  expect_equal(result, expected)
+})
+
+test_that("IMah_dist computes cov, mean_c, and mean_r automatically with IMCD when not provided", {
+  Data <- data.frame(
+    L1 = c(1, 2, 3, 4, 5, 6), U1 = c(3, 4, 5, 6, 7, 8),
+    L2 = c(0, 1, 0, -1, -1, 1), U2 = c(2, 3, 3, 2, 3, 2)
+  )
+  obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = c("X", "Y"), LatentParam = list(0.25), LatentCase = "U_id_symmetric", LatentDist = "Unif")
+
+  result <- IMah_dist(obj)
+
+  # Compute expected result
+  IMCD_res <- IMCD(obj,m=floor(obj@NObs*0.75))
+  mean_c <- IMCD_res$mean_IMCD_c
+  mean_r <- IMCD_res$mean_IMCD_r
+  cov_mat <- IMCD_res$cov_IMCD
+  cov_inv <- safe_solve_cov(cov_mat)
+  C_0 <- t(obj@Centers)-mean_c
+  R_0 <- t(obj@Ranges)-mean_r
+  delta <- obj@LatentParam[[1]]
+  cov_inv <- safe_solve_cov(cov_mat)
+  expected <- mahalanobis(obj@Centers, mean_c, cov_inv, inverted = TRUE) + 
+               + delta*mahalanobis(obj@Ranges, mean_r, cov_inv, inverted = TRUE) 
+
+  expect_equal(result, expected)
+})
+
 test_that("IMah_dist_pairs computes U_id pairwise distances correctly", {
   Data <- data.frame(L1 = c(1, 3), U1 = c(4, 7))
   obj <- intData(Data, Seq = "LbUb_VarbyVar", VarNames = "V",

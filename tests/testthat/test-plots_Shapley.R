@@ -59,6 +59,16 @@ test_that("plot_beeswarm_int_Shapley and barplot_decomp produce plots when deps 
   expect_s3_class(res2, "ggplot")
 })
 
+test_that("plot_beeswarm_int_Shapley y_axis limits can be set", {
+  testthat::skip_if_not_installed("ggplot2")
+  testthat::skip_if_not_installed("ggbeeswarm")
+  shp <- make_shapley_matrix(5, 3)
+  color_class <- rep(c("Regular","Outlier"), length.out = nrow(shp))
+  res <- plot_beeswarm_int_Shapley(shp, color_class = color_class, ggplotly = FALSE, y_limits = c(0, 10))
+  expect_s3_class(res, "ggplot")
+  expect_equal(res$scales$get_scales("y")$limits, c(0, 10))
+})
+
 test_that("plot_beeswarm_int_Shapley ggplotly returns plotly object", {
   testthat::skip_if_not_installed("ggplot2")
   testthat::skip_if_not_installed("plotly")

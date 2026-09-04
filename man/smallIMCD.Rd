@@ -12,7 +12,7 @@ smallIMCD(m, data)
 \item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
-A list of estimated barycenter and symbolic covariance matrix
+A list of z (\code{updated_z}), estimated symbolic covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 }
 \description{
 Obtain unweighted estimates for data with <= 600 observations

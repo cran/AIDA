@@ -9,7 +9,7 @@ status](https://www.r-pkg.org/badges/version/AIDA)](https://CRAN.R-project.org/p
 [![CRAN
 checks](https://badges.cranchecks.info/worst/AIDA.svg)](https://cran.r-project.org/web/checks/check_results_AIDA.html)
 [![GitHub
-Version](https://img.shields.io/badge/GitHub-v0.2.0-blue)](https://github.com/catarinaploureiro/AIDA)
+Version](https://img.shields.io/badge/GitHub-v0.2.1-blue)](https://github.com/catarinaploureiro/AIDA)
 [![codecov](https://codecov.io/gh/catarinaploureiro/AIDA/branch/main/graph/badge.svg)](https://app.codecov.io/gh/catarinaploureiro/AIDA)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

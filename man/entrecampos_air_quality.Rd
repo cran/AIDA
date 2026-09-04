@@ -20,7 +20,7 @@ data(entrecampos_air_quality)
 This dataset contains interval data of air pollutants' concentrations, including min-max values and microdata.
 This air quality dataset was obtained from a monitoring station in Entrecampos, Lisbon.
 It is composed of 9 pollutants' concentration measures in µg/m3 during the years 2019, 2020, and 2021: sulphur dioxide (SO2), particles < 10µm, ozone (O3), nitrogen dioxide (NO2), carbon monoxide (CO), benzene (C6H6), particles < 2.5µm, nitrogen oxides (NOx), and nitrogen monoxide (NO).
-For the \code{microdata_transformed}, \code{min_max}, and \code{intData}, the pollutant "benzene" was removed due to a high number of missing values.
+For the \code{microdata_transformed}, \code{min_max}, and \code{intData}, the pollutant "benzene" was removed due to a high number of missing values and package \code{imputeTS} (available at \url{https://cran.r-project.org/package=imputeTS})  was employed to deal with the remaining missing values using interpolation.
 The aggregation of the microdata was done by day.
 }
 \examples{
@@ -33,5 +33,7 @@ head(entrecampos_air_quality$intData)
 }
 \references{
 This data was retrieved from the Portuguese Environment Agency database available at \url{https://qualar.apambiente.pt/}.
+
+Loureiro, C.P., Oliveira, M.R., Brito, P., Oliveira, L. (2025). Air Quality Data Analysis with Symbolic Principal Components. In: Henriques-Rodrigues, L., Menezes, R., Machado, L.M., Faria, S., de Carvalho, M. (eds) New Frontiers in Statistics and Data Science. SPE 2021. Springer Proceedings in Mathematics & Statistics, vol 469. Springer, Cham. \doi{10.1007/978-3-031-68949-9_25}
 }
 \keyword{datasets}

@@ -12,7 +12,9 @@ farness(dist, cutoff_value = NULL)
 \item{cutoff_value}{Optional cutoff value between 0 and 1 to flag outliers. If provided, the function returns both the farness probabilities and the cutoff distance value in the original distance scale.}
 }
 \value{
-Farness of each observation. Values between 0 and 1. If \code{cutoff_value} is provided, a list with the farness probabilities and the cutoff distance value in the original distance scale is returned.
+Either a vector of farness probabilities for each observation (if \code{cutoff_value} is not provided) or a list containing (if \code{cutoff_value} is provided):
+\item{\code{farness_probs}}{A vector of farness probabilities for each observation. Values between 0 and 1.}
+\item{\code{cutoff_value}}{The cutoff distance value in the original distance scale corresponding to the specified \code{cutoff_value} probability.}
 }
 \description{
 Estimate farness from a distance vector in order to identify outlier observations.

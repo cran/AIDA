@@ -13,7 +13,8 @@ plot_beeswarm_int_Shapley(
   shape_class = NULL,
   shape_label = NULL,
   ggplotly = FALSE,
-  label_obs = NULL
+  label_obs = NULL,
+  y_limits = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ plot_beeswarm_int_Shapley(
 \item{ggplotly}{Logical. If \code{TRUE} (default), the plot is converted to an interactive \link[plotly:plotly]{plotly} object.}
 
 \item{label_obs}{A vector with the names of the observations to be labeled in the plot when \code{ggplotly = FALSE}. Default is NULL.}
+
+\item{y_limits}{A numeric vector of length 2 specifying the limits for the y-axis. Default is NULL, so the limits are determined automatically.}
 }
 \value{
 Returns a beeswarm plot that displays the Shapley values (\code{\link{int_Shapley}}) for each observation and feature.

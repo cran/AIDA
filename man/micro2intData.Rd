@@ -14,7 +14,8 @@ micro2intData(
   TriangParam = 0,
   BetaParam.a = 1,
   BetaParam.b = 1,
-  estimate.DistParam = FALSE
+  estimate.DistParam = FALSE,
+  removeDegenerate = FALSE
 )
 }
 \arguments{
@@ -49,9 +50,11 @@ The default is \code{1}.}
 
 \item{estimate.DistParam}{Logical parameter indicating if estimation of the parameters of the latent distributions should be performed. Can only be set to TRUE if \code{LatentCase="General"}.
 The default is \code{FALSE}.}
+
+\item{removeDegenerate}{Logical parameter indicating if observations with at least one degenerate interval should be removed. The default is \code{FALSE}.}
 }
 \value{
-An \code{\linkS4class{intData}} object containing the aggregated interval-valued data, or \code{NULL} if all units lead to degenerate intervals.
+An \code{\linkS4class{intData}} object containing the aggregated interval-valued data. If \code{removeDegenerate} is \code{TRUE}, observations with degenerate intervals are removed, and \code{NULL} is returned if all observations are removed.
 }
 \description{
 Aggregates microdata from a data frame into interval-valued data using various criteria and latent distribution settings.
@@ -60,7 +63,7 @@ Aggregates microdata from a data frame into interval-valued data using various c
 This function processes a data frame of microdata and aggregates it into interval-valued data according to the specified grouping factor and aggregation criteria.
 It can handle different latent distribution cases and parameter settings.
 
-If some rows contain invalid (non-finite or missing) values, those rows are removed before aggregation. If all rows in the resulting interval-valued data are degenerate (i.e., the lower bound equals the upper bound), the function will return \code{NULL}.
+If some rows contain invalid (non-finite or missing) values, those rows are removed before aggregation. Degenerate intervals (i.e., intervals whose lower and upper bounds are equal) can be removed by setting \code{removeDegenerate} to \code{TRUE}.
 }
 \examples{
 data(creditcard)

@@ -215,7 +215,7 @@ intData <- function(macrodata,
     if (!((is.list(LatentParam) && length(LatentParam) == 1 && all(vapply(LatentParam, is.numeric, logical(1)))) ||
           (is.list(LatentParam) && length(LatentParam) == 2 &&
             (all(vapply(LatentParam, is.numeric, logical(1))) || all(vapply(LatentParam, is.matrix, logical(1))))))){
-      stop("`LatentParam` must be either a number (`LatentCase='U_id_symmetric'`), a list of two numbers (`LatentCase='U_id'`) or a list of two matrices (`LatentCase='General'`).")
+      stop("`LatentParam` must be either a list of a single number (`LatentCase='U_id_symmetric'`), a list of two numbers (`LatentCase='U_id'`) or a list of two matrices (`LatentCase='General'`).")
     }
     if (identical(LatentDist, c("Unif","Triang","TNorm","InvTri","Beta","KDE","Degenerated"))) stop("Error: If LatentParam is provided, LatentDist must also be provided.")
     if (identical(LatentCase, c("U_id_symmetric","U_id","General"))){

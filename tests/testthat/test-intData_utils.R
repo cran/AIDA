@@ -346,6 +346,12 @@ test_that("CalE.beta.kde computes correctly", {
   expect_true(is.finite(calE))
 })
 
+test_that("CalE.beta.kde handles a degenerate KDE distribution", {
+  calE <- AIDA:::CalE.beta.kde(rep(0.25, 3), a1 = 2, b1 = 1)
+
+  expect_equal(calE, 0.25 * (2 * 2 / 3 - 1))
+})
+
 test_that("CalE.kde.kde computes correctly", {
   micro1 <- c(-0.5, -0.3, -0.1, 0.1, 0.3, 0.5)
   micro2 <- c(-0.4, -0.2, 0, 0.2, 0.4, 0.6)
@@ -354,6 +360,12 @@ test_that("CalE.kde.kde computes correctly", {
   expect_true(is.numeric(calE))
   expect_true(is.finite(calE))
   expect_true(calE >= 0)
+})
+
+test_that("CalE.kde.kde handles degenerate KDE distributions", {
+  expect_equal(AIDA:::CalE.kde.kde(rep(0, 3), rep(0, 3)), 0)
+  expect_equal(AIDA:::CalE.kde.kde(rep(0.25, 3), rep(-0.5, 3)), -0.125)
+  expect_equal(AIDA:::CalE.kde.kde(rep(0.25, 3), c(-0.5, 0, 0.5)), 0)
 })
 
 test_that("CalE.triang.triang computes correctly", {

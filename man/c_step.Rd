@@ -14,7 +14,7 @@ c_step(z, m, data)
 \item{data}{An \code{\linkS4class{intData}} object containing the macrodata/interval data}
 }
 \value{
-A list of z, covariance, barycenter and robust distances
+A list of z (\code{updated_z}), covariance (\code{S}), barycenter (\code{mean_c}, \code{mean_r}) and robust distances (\code{robust_dist})
 }
 \description{
 Perform single iteration of C-step

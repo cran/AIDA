@@ -37,3 +37,12 @@
 * Improvements to documentation and usability.
 * Added a unit test suite.
 * Reduced package dependencies.
+
+## AIDA 0.2.1
+
+* Fixed handling of degenerate constant latent samples when computing KDE-based latent moments, improving compatibility with `kde1d 1.2.0` and later.
+* Added an option to retain or remove degenerate intervals in `micro2intData()`.
+* Added support for univariate datasets in `IMCD()`.
+* Added an option to customize the y-axis limits in `plot_beeswarm_int_Shapley()`.
+* Simplified the column names of the `entrecampos_air_quality` dataset.
+* Improved documentation.
